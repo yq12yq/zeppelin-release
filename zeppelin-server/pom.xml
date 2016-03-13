@@ -15,21 +15,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>zeppelin</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.6.0-incubating-SNAPSHOT</version>
+    <version>0.6.0.2.4.1.0-327</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-server</artifactId>
   <packaging>jar</packaging>
-  <version>0.6.0-incubating-SNAPSHOT</version>
+  <version>0.6.0.2.4.1.0-327</version>
   <name>Zeppelin: Server</name>
   <url>http://www.nflabs.com</url>
 
@@ -347,7 +346,7 @@
         <artifactId>scalatest-maven-plugin</artifactId>
         <version>1.0</version>
         <configuration>
-          <stderr/>
+          <stderr />
           <systemProperties>
             <spark.testing>1</spark.testing>
           </systemProperties>
@@ -372,7 +371,7 @@
             <phase>pre-integration-test</phase>
             <configuration>
               <target unless="skipTests">
-                <exec executable="./zeppelin-daemon.sh" dir="${zeppelin.daemon.package.base}" spawn="true">
+                <exec dir="${zeppelin.daemon.package.base}" executable="./zeppelin-daemon.sh" spawn="true">
                   <arg value="start" />
                 </exec>
               </target>
@@ -387,7 +386,7 @@
             <phase>post-integration-test</phase>
             <configuration>
               <target unless="skipTests">
-                <exec executable="./zeppelin-daemon.sh" dir="${zeppelin.daemon.package.base}" spawn="false">
+                <exec dir="${zeppelin.daemon.package.base}" executable="./zeppelin-daemon.sh" spawn="false">
                   <arg value="stop" />
                 </exec>
               </target>
