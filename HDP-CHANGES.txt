@@ -1,0 +1,11 @@
+Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
+
+ZEPPELIN-1130: Make Livy create session retries configurable
+ZEPPELIN-1146: Zeppelin JDBC interpreter should work in a Kerberos environment
+ZEPPELIN-1143: Interpreter dependencies are not downloaded on zeppelin start
+ZEPPELIN-1149: %sh interpreter kerberos support
+ZEPPELIN-1168: Add http header X-Requested-By in post request to Livy Interpreter
+ZEPPELIN-1159: catch RestTemplate exception
+ZEPPELIN-1166: change the jquery-ui css file name
+ZEPPELIN-1094: Run all paragraphs keeps appending empty paragraphs
+ZEPPELIN-1212: User impersonation support in JDBC interpreter for Hive
