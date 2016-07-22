@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+ZEPPELIN-1199: Need to login using keytab and principal before creating SparkContext in secured cluster
 ZEPPELIN-1130: Make Livy create session retries configurable
 ZEPPELIN-1146: Zeppelin JDBC interpreter should work in a Kerberos environment
 ZEPPELIN-1143: Interpreter dependencies are not downloaded on zeppelin start
