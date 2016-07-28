@@ -33,8 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Joiner;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.spark.HttpServer;
 import org.apache.spark.SparkConf;
@@ -418,6 +416,21 @@ public class SparkInterpreter extends Interpreter {
 
   @Override
   public void open() {
+    // set properties and do login before creating any spark stuff for secured cluster
+    if (getProperty("master").equals("yarn-client")) {
+      System.setProperty("SPARK_YARN_MODE", "true");
+    }
+    if (getProperty().contains("spark.yarn.keytab") &&
+            getProperty().contains("spark.yarn.principal")) {
+      try {
+        String keytab = getProperty().getProperty("spark.yarn.keytab");
+        String principal = getProperty().getProperty("spark.yarn.principal");
+        UserGroupInformation.loginUserFromKeytab(principal, keytab);
+      } catch (IOException e) {
+        throw new RuntimeException("Can not pass kerberos authentication", e);
+      }
+    }
+
     URL[] urls = getClassloaderUrls();
 
     // Very nice discussion about how scala compiler handle classpath
