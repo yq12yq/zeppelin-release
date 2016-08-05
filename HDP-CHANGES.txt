@@ -12,3 +12,4 @@ ZEPPELIN-1166: change the jquery-ui css file name
 ZEPPELIN-1094: Run all paragraphs keeps appending empty paragraphs
 ZEPPELIN-1212: User impersonation support in JDBC interpreter for Hive
 BUG-62349: Example notebooks are not visible on Zeppelin UI
+ZEPPELIN-1175. AM log is not available for yarn-client mode
