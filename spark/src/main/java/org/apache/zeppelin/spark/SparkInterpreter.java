@@ -368,15 +368,6 @@ public class SparkInterpreter extends Interpreter {
       conf.set("spark.yarn.isPython", "true");
     }
 
-    if (conf.contains("spark.yarn.keytab") && conf.contains("spark.yarn.principal")) {
-      try {
-        String keytab = conf.get("spark.yarn.keytab");
-        String principal = conf.get("spark.yarn.principal");
-        UserGroupInformation.loginUserFromKeytab(principal, keytab);
-      } catch (IOException e) {
-        throw new RuntimeException("Can not pass kerberos authentication", e);
-      }
-    }
     SparkContext sparkContext = new SparkContext(conf);
     return sparkContext;
   }
@@ -420,8 +411,8 @@ public class SparkInterpreter extends Interpreter {
     if (getProperty("master").equals("yarn-client")) {
       System.setProperty("SPARK_YARN_MODE", "true");
     }
-    if (getProperty().contains("spark.yarn.keytab") &&
-            getProperty().contains("spark.yarn.principal")) {
+    if (getProperty().containsKey("spark.yarn.keytab") &&
+            getProperty().containsKey("spark.yarn.principal")) {
       try {
         String keytab = getProperty().getProperty("spark.yarn.keytab");
         String principal = getProperty().getProperty("spark.yarn.principal");
