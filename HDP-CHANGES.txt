@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+ZEPPELIN-1319 Use absolute path for ssl truststore and keystore when available
 ZEPPELIN-530: Added changes for Credential Provider, using hadoop commons Credential apis
 ZEPPELIN-1305: Fix bug of ZEPPELIN-1215
 ZEPPELIN-1175: AM log is not available for yarn-client mode
