@@ -56,7 +56,7 @@ public class NoteTest {
 
   @Test
   public void runNormalTest() {
-    when(replLoader.get("spark")).thenReturn(interpreter);
+    when(replLoader.get("spark", "anonymous")).thenReturn(interpreter);
     when(interpreter.getScheduler()).thenReturn(scheduler);
 
     String pText = "%spark sc.version";
@@ -67,15 +67,15 @@ public class NoteTest {
 
     ArgumentCaptor<Paragraph> pCaptor = ArgumentCaptor.forClass(Paragraph.class);
     verify(scheduler, only()).submit(pCaptor.capture());
-    verify(replLoader, only()).get("spark");
+    verify(replLoader, only()).get("spark", "anonymous");
 
     assertEquals("Paragraph text", pText, pCaptor.getValue().getText());
   }
 
   @Test
   public void runJdbcTest() {
-    when(replLoader.get("mysql")).thenReturn(null);
-    when(replLoader.get("jdbc")).thenReturn(interpreter);
+    when(replLoader.get("mysql", "anonymous")).thenReturn(null);
+    when(replLoader.get("jdbc", "anonymous")).thenReturn(interpreter);
     when(interpreter.getScheduler()).thenReturn(scheduler);
 
     String pText = "%mysql show databases";
@@ -86,7 +86,7 @@ public class NoteTest {
 
     ArgumentCaptor<Paragraph> pCaptor = ArgumentCaptor.forClass(Paragraph.class);
     verify(scheduler, only()).submit(pCaptor.capture());
-    verify(replLoader, times(2)).get(anyString());
+    verify(replLoader, times(2)).get(anyString(), "anonymous");
 
     assertEquals("Change paragraph text", "%jdbc(mysql) show databases", pCaptor.getValue().getEffectiveText());
     assertEquals("Change paragraph text", pText, pCaptor.getValue().getText());

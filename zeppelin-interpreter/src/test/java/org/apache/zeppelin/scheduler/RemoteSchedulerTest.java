@@ -80,7 +80,9 @@ public class RemoteSchedulerTest implements RemoteInterpreterProcessListener {
         "fakeRepo",
         env,
         10 * 1000,
-        this);
+        this,
+        "anonymous",
+        false);
 
     intpGroup.put("note", new LinkedList<Interpreter>());
     intpGroup.get("note").add(intpA);
@@ -168,7 +170,9 @@ public class RemoteSchedulerTest implements RemoteInterpreterProcessListener {
         "fakeRepo",
         env,
         10 * 1000,
-        this);
+        this,
+        "anonymous",
+        false);
 
     intpGroup.put("note", new LinkedList<Interpreter>());
     intpGroup.get("note").add(intpA);

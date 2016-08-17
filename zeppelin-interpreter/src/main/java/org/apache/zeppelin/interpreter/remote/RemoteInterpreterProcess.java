@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -91,7 +91,8 @@ public class RemoteInterpreterProcess implements ExecuteResultHandler {
     return port;
   }
 
-  public int reference(InterpreterGroup interpreterGroup) {
+  public int reference(InterpreterGroup interpreterGroup,  String userName,
+      Boolean isUserImpersonate) {
     synchronized (referenceCount) {
       if (executor == null) {
         if (interpreterGroup.containsKey(Constants.EXISTING_PROCESS)) {
@@ -127,6 +128,10 @@ public class RemoteInterpreterProcess implements ExecuteResultHandler {
           cmdLine.addArgument(interpreterDir, false);
           cmdLine.addArgument("-p", false);
           cmdLine.addArgument(Integer.toString(port), false);
+          if (isUserImpersonate && !userName.equals("anonymous")) {
+            cmdLine.addArgument("-u", false);
+            cmdLine.addArgument(userName, false);
+          }
           cmdLine.addArgument("-l", false);
           cmdLine.addArgument(localRepoDir, false);
 

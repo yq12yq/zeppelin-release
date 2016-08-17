@@ -512,6 +512,9 @@
               <!--The following files are mechanical-->
               <exclude>r/R/rzeppelin/DESCRIPTION</exclude>
               <exclude>r/R/rzeppelin/NAMESPACE</exclude>
+
+              <!-- removing HDP-CHANGES.txt from rat check -->
+              <exclude>HDP-CHANGES.txt</exclude>
             </excludes>
           </configuration>
 

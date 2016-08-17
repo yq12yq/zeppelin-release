@@ -1,6 +1,7 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
-ZEPPELIN-1319 Use absolute path for ssl truststore and keystore when available
+ZEPPELIN-1320: Run zeppelin interpreter process as web front end user
+ZEPPELIN-1319: Use absolute path for ssl truststore and keystore when available
 ZEPPELIN-1305: Fix bug of ZEPPELIN-1215
 ZEPPELIN-1175: AM log is not available for yarn-client mode
 ZEPPELIN-1242: Should set property SPARK_YARN_MODE and do login before creating any spark stuff
@@ -14,5 +15,5 @@ ZEPPELIN-1159: catch RestTemplate exception
 ZEPPELIN-1166: change the jquery-ui css file name
 ZEPPELIN-1094: Run all paragraphs keeps appending empty paragraphs
 ZEPPELIN-1212: User impersonation support in JDBC interpreter for Hive
-BUG-62349: Example notebooks are not visible on Zeppelin UI
+BUG-62349:     Example notebooks are not visible on Zeppelin UI
 

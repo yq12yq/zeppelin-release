@@ -17,30 +17,28 @@
 
 package org.apache.zeppelin.notebook;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.zeppelin.display.AngularObject;
 import org.apache.zeppelin.display.AngularObjectRegistry;
-import org.apache.zeppelin.interpreter.thrift.InterpreterCompletion;
-import org.apache.zeppelin.user.AuthenticationInfo;
-import org.apache.zeppelin.user.Credentials;
-import org.apache.zeppelin.user.UserCredentials;
-import org.apache.zeppelin.user.UsernamePassword;
 import org.apache.zeppelin.display.GUI;
 import org.apache.zeppelin.display.Input;
 import org.apache.zeppelin.interpreter.*;
 import org.apache.zeppelin.interpreter.Interpreter.FormType;
 import org.apache.zeppelin.interpreter.InterpreterResult.Code;
+import org.apache.zeppelin.interpreter.thrift.InterpreterCompletion;
 import org.apache.zeppelin.resource.ResourcePool;
 import org.apache.zeppelin.scheduler.Job;
 import org.apache.zeppelin.scheduler.JobListener;
 import org.apache.zeppelin.scheduler.Scheduler;
+import org.apache.zeppelin.user.AuthenticationInfo;
+import org.apache.zeppelin.user.Credentials;
+import org.apache.zeppelin.user.UserCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
-
-import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Paragraph is a representation of an execution unit.
@@ -199,7 +197,11 @@ public class Paragraph extends Job implements Serializable, Cloneable {
   }
 
   public Interpreter getRepl(String name) {
-    return replLoader.get(name);
+    String username = "anonymous";
+    if (getAuthenticationInfo() != null && getAuthenticationInfo().getUser() != null) {
+      username = getAuthenticationInfo().getUser();
+    }
+    return replLoader.get(name, username);
   }
 
   public Interpreter getCurrentRepl() {
@@ -338,8 +340,10 @@ public class Paragraph extends Job implements Serializable, Cloneable {
 
     if (!getNoteReplLoader().getInterpreterSettings().isEmpty()) {
       InterpreterSetting intpGroup = getNoteReplLoader().getInterpreterSettings().get(0);
-      registry = intpGroup.getInterpreterGroup(note.id()).getAngularObjectRegistry();
-      resourcePool = intpGroup.getInterpreterGroup(note.id()).getResourcePool();
+      registry = intpGroup.getInterpreterGroup(note.id(), authenticationInfo.getUser())
+          .getAngularObjectRegistry();
+      resourcePool = intpGroup.getInterpreterGroup(note.id(), authenticationInfo.getUser())
+          .getResourcePool();
     }
 
     List<InterpreterContextRunner> runners = new LinkedList<InterpreterContextRunner>();

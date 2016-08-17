@@ -73,7 +73,9 @@ public class RemoteAngularObjectTest implements AngularObjectRegistryListener {
         "fakeRepo",
         env,
         10 * 1000,
-        null
+        null,
+        "anonymous",
+        false
     );
 
     intpGroup.put("note", new LinkedList<Interpreter>());

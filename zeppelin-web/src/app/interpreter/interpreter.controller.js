@@ -127,6 +127,9 @@ angular.module('zeppelinWebApp').controller('InterpreterCtrl', function($scope, 
             // remote always true for now
             setting.option.remote = true;
           }
+          if (setting.option.isUserImpersonate === undefined) {
+            setting.option.isUserImpersonate = false;
+          }
           var request = {
             option: angular.copy(setting.option),
             properties: angular.copy(setting.properties),

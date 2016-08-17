@@ -17,39 +17,33 @@
 
 package org.apache.zeppelin.interpreter.remote;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.thrift.transport.TTransportException;
 import org.apache.zeppelin.display.AngularObject;
 import org.apache.zeppelin.display.AngularObjectRegistry;
-import org.apache.zeppelin.interpreter.remote.mock.MockInterpreterEnv;
-import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService;
-import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService.Client;
-import org.apache.zeppelin.user.AuthenticationInfo;
 import org.apache.zeppelin.display.GUI;
 import org.apache.zeppelin.interpreter.*;
 import org.apache.zeppelin.interpreter.InterpreterResult.Code;
 import org.apache.zeppelin.interpreter.remote.mock.MockInterpreterA;
 import org.apache.zeppelin.interpreter.remote.mock.MockInterpreterB;
+import org.apache.zeppelin.interpreter.remote.mock.MockInterpreterEnv;
+import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService.Client;
 import org.apache.zeppelin.resource.LocalResourcePool;
 import org.apache.zeppelin.scheduler.Job;
 import org.apache.zeppelin.scheduler.Job.Status;
 import org.apache.zeppelin.scheduler.Scheduler;
+import org.apache.zeppelin.user.AuthenticationInfo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import static org.junit.Assert.*;
 
 public class RemoteInterpreterTest {
 
@@ -89,7 +83,9 @@ public class RemoteInterpreterTest {
             "fakeRepo",
             env,
             10 * 1000,
-            null);
+            null,
+            "anonymous",
+            false);
   }
 
   private RemoteInterpreter createMockInterpreterB(Properties p) {
@@ -106,7 +102,9 @@ public class RemoteInterpreterTest {
             "fakeRepo",
             env,
             10 * 1000,
-            null);
+            null,
+            "anonymous",
+            false);
   }
 
   @Test
@@ -204,7 +202,9 @@ public class RemoteInterpreterTest {
         "fakeRepo",
         env,
         10 * 1000,
-        null);
+        null,
+        "anonymous",
+        false);
 
 
     intpGroup.get("note").add(intpA);
@@ -219,7 +219,9 @@ public class RemoteInterpreterTest {
         "fakeRepo",
         env,
         10 * 1000,
-        null);
+        null,
+        "anonymous",
+        false);
 
     intpGroup.get("note").add(intpB);
     intpB.setInterpreterGroup(intpGroup);
@@ -683,7 +685,8 @@ public class RemoteInterpreterTest {
     //Given
     final Client client = Mockito.mock(Client.class);
     final RemoteInterpreter intr = new RemoteInterpreter(new Properties(), "noteId",
-            MockInterpreterA.class.getName(), "runner", "path","localRepo", env, 10 * 1000, null);
+        MockInterpreterA.class.getName(), "runner", "path", "localRepo", env, 10 * 1000, null,
+        "anonymous", false);
     final AngularObjectRegistry registry = new AngularObjectRegistry("spark", null);
     registry.add("name", "DuyHai DOAN", "nodeId", "paragraphId");
     final InterpreterGroup interpreterGroup = new InterpreterGroup("groupId");
@@ -728,7 +731,9 @@ public class RemoteInterpreterTest {
         "fakeRepo",
         env,
         10 * 1000,
-        null);
+        null,
+        "anonymous",
+        false);
 
     intpGroup.put("note", new LinkedList<Interpreter>());
     intpGroup.get("note").add(intp);

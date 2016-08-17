@@ -56,6 +56,8 @@ public class RemoteInterpreter extends Interpreter {
   private int connectTimeout;
   private int maxPoolSize;
   private static String schedulerName;
+  private String userName;
+  private Boolean isUserImpersonate;
 
   public RemoteInterpreter(Properties property,
       String noteId,
@@ -65,7 +67,9 @@ public class RemoteInterpreter extends Interpreter {
       String localRepoPath,
       int connectTimeout,
       int maxPoolSize,
-      RemoteInterpreterProcessListener remoteInterpreterProcessListener) {
+      RemoteInterpreterProcessListener remoteInterpreterProcessListener,
+      String userName,
+      Boolean isUserImpersonate) {
     super(property);
     this.noteId = noteId;
     this.className = className;
@@ -77,6 +81,8 @@ public class RemoteInterpreter extends Interpreter {
     this.connectTimeout = connectTimeout;
     this.maxPoolSize = maxPoolSize;
     this.remoteInterpreterProcessListener = remoteInterpreterProcessListener;
+    this.userName = userName;
+    this.isUserImpersonate = isUserImpersonate;
   }
 
   public RemoteInterpreter(Properties property,
@@ -87,7 +93,9 @@ public class RemoteInterpreter extends Interpreter {
       String localRepoPath,
       Map<String, String> env,
       int connectTimeout,
-      RemoteInterpreterProcessListener remoteInterpreterProcessListener) {
+      RemoteInterpreterProcessListener remoteInterpreterProcessListener,
+      String userName,
+      Boolean isUserImpersonate) {
     super(property);
     this.className = className;
     this.noteId = noteId;
@@ -99,6 +107,8 @@ public class RemoteInterpreter extends Interpreter {
     this.connectTimeout = connectTimeout;
     this.maxPoolSize = 10;
     this.remoteInterpreterProcessListener = remoteInterpreterProcessListener;
+    this.userName = userName;
+    this.isUserImpersonate = isUserImpersonate;
   }
 
   private Map<String, String> getEnvFromInterpreterProperty(Properties property) {
@@ -152,7 +162,7 @@ public class RemoteInterpreter extends Interpreter {
     RemoteInterpreterProcess interpreterProcess = getInterpreterProcess();
 
     final InterpreterGroup interpreterGroup = getInterpreterGroup();
-    interpreterProcess.reference(interpreterGroup);
+    interpreterProcess.reference(interpreterGroup, userName, isUserImpersonate);
     interpreterProcess.setMaxPoolSize(
         Math.max(this.maxPoolSize, interpreterProcess.getMaxPoolSize()));
     String groupId = interpreterGroup.getId();

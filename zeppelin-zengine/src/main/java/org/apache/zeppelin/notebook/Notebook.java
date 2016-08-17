@@ -257,7 +257,7 @@ public class Notebook {
       List<String> interpreterSettingIds) throws IOException {
     Note note = getNote(id);
     if (note != null) {
-      note.getNoteReplLoader().setInterpreters(interpreterSettingIds);
+      note.getNoteReplLoader().setInterpreters(interpreterSettingIds, "anonymous");
       // comment out while note.getNoteReplLoader().setInterpreters(...) do the same
       // replFactory.putNoteInterpreterSettingBinding(id, interpreterSettingIds);
     }
@@ -293,13 +293,14 @@ public class Notebook {
     synchronized (notes) {
       note = notes.remove(id);
     }
-    replFactory.removeNoteInterpreterSettingBinding(id);
+    replFactory.removeNoteInterpreterSettingBinding(id, subject.getUser());
     notebookIndex.deleteIndexDocs(note);
     notebookAuthorization.removeNote(id);
 
     // remove from all interpreter instance's angular object registry
     for (InterpreterSetting settings : replFactory.get()) {
-      AngularObjectRegistry registry = settings.getInterpreterGroup(id).getAngularObjectRegistry();
+      AngularObjectRegistry registry = settings.getInterpreterGroup(id,
+          subject.getUser()).getAngularObjectRegistry();
       if (registry instanceof RemoteAngularObjectRegistry) {
         // remove paragraph scope object
         for (Paragraph p : note.getParagraphs()) {
@@ -391,7 +392,7 @@ public class Notebook {
       SnapshotAngularObject snapshot = angularObjectSnapshot.get(name);
       List<InterpreterSetting> settings = replFactory.get();
       for (InterpreterSetting setting : settings) {
-        InterpreterGroup intpGroup = setting.getInterpreterGroup(note.id());
+        InterpreterGroup intpGroup = setting.getInterpreterGroup(note.id(), subject.getUser());
         if (intpGroup.getId().equals(snapshot.getIntpGroupId())) {
           AngularObjectRegistry registry = intpGroup.getAngularObjectRegistry();
           String noteId = snapshot.getAngularObject().getNoteId();

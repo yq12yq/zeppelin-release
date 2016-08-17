@@ -74,24 +74,24 @@ public class NoteInterpreterLoaderTest {
   public void testGetInterpreter() throws IOException {
     NoteInterpreterLoader loader = new NoteInterpreterLoader(factory);
     loader.setNoteId("note");
-    loader.setInterpreters(factory.getDefaultInterpreterSettingList());
+    loader.setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     // when there're no interpreter selection directive
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get(null).getClassName());
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get("").getClassName());
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get(" ").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get(null, "anonymous").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get("", "anonymous").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get(" ", "anonymous").getClassName());
 
     // when group name is omitted
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter11", loader.get("mock11").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter11", loader.get("mock11", "anonymous").getClassName());
 
     // when 'name' is ommitted
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get("group1").getClassName());
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter2", loader.get("group2").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get("group1", "anonymous").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter2", loader.get("group2", "anonymous").getClassName());
 
     // when nothing is ommitted
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get("group1.mock1").getClassName());
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter11", loader.get("group1.mock11").getClassName());
-    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter2", loader.get("group2.mock2").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter1", loader.get("group1.mock1", "anonymous").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter11", loader.get("group1.mock11", "anonymous").getClassName());
+    assertEquals("org.apache.zeppelin.interpreter.mock.MockInterpreter2", loader.get("group2.mock2", "anonymous").getClassName());
 
     loader.close();
   }
@@ -100,36 +100,36 @@ public class NoteInterpreterLoaderTest {
   public void testNoteSession() throws IOException {
     NoteInterpreterLoader loaderA = new NoteInterpreterLoader(factory);
     loaderA.setNoteId("noteA");
-    loaderA.setInterpreters(factory.getDefaultInterpreterSettingList());
+    loaderA.setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
     loaderA.getInterpreterSettings().get(0).getOption().setPerNoteSession(true);
 
     NoteInterpreterLoader loaderB = new NoteInterpreterLoader(factory);
     loaderB.setNoteId("noteB");
-    loaderB.setInterpreters(factory.getDefaultInterpreterSettingList());
+    loaderB.setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
     loaderB.getInterpreterSettings().get(0).getOption().setPerNoteSession(true);
 
     // interpreters are not created before accessing it
-    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("shared_process").get("noteA"));
-    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("shared_process").get("noteB"));
+    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("shared_process", "anonymous").get("noteA"));
+    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("shared_process", "anonymous").get("noteB"));
 
-    loaderA.get(null).open();
-    loaderB.get(null).open();
+    loaderA.get(null, "anonymous").open();
+    loaderB.get(null, "anonymous").open();
 
     assertTrue(
-        loaderA.get(null).getInterpreterGroup().getId().equals(
-        loaderB.get(null).getInterpreterGroup().getId()));
+        loaderA.get(null, "anonymous").getInterpreterGroup().getId().equals(
+        loaderB.get(null, "anonymous").getInterpreterGroup().getId()));
 
     // interpreters are created after accessing it
-    assertNotNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("shared_process").get("noteA"));
-    assertNotNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("shared_process").get("noteB"));
+    assertNotNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("shared_process", "anonymous").get("noteA"));
+    assertNotNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("shared_process", "anonymous").get("noteB"));
 
     // when
     loaderA.close();
     loaderB.close();
 
     // interpreters are destroyed after close
-    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("shared_process").get("noteA"));
-    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("shared_process").get("noteB"));
+    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("shared_process", "anonymous").get("noteA"));
+    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("shared_process", "anonymous").get("noteB"));
 
   }
 
@@ -137,37 +137,37 @@ public class NoteInterpreterLoaderTest {
   public void testNotePerInterpreterProcess() throws IOException {
     NoteInterpreterLoader loaderA = new NoteInterpreterLoader(factory);
     loaderA.setNoteId("noteA");
-    loaderA.setInterpreters(factory.getDefaultInterpreterSettingList());
+    loaderA.setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
     loaderA.getInterpreterSettings().get(0).getOption().setPerNoteProcess(true);
 
     NoteInterpreterLoader loaderB = new NoteInterpreterLoader(factory);
     loaderB.setNoteId("noteB");
-    loaderB.setInterpreters(factory.getDefaultInterpreterSettingList());
+    loaderB.setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
     loaderB.getInterpreterSettings().get(0).getOption().setPerNoteProcess(true);
 
     // interpreters are not created before accessing it
-    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("noteA").get("noteA"));
-    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("noteB").get("noteB"));
+    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("noteA", "anonymous").get("noteA"));
+    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("noteB", "anonymous").get("noteB"));
 
-    loaderA.get(null).open();
-    loaderB.get(null).open();
+    loaderA.get(null, "anonymous").open();
+    loaderB.get(null, "anonymous").open();
 
     // per note interpreter process
     assertFalse(
-        loaderA.get(null).getInterpreterGroup().getId().equals(
-        loaderB.get(null).getInterpreterGroup().getId()));
+        loaderA.get(null, "anonymous").getInterpreterGroup().getId().equals(
+        loaderB.get(null, "anonymous").getInterpreterGroup().getId()));
 
     // interpreters are created after accessing it
-    assertNotNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("noteA").get("noteA"));
-    assertNotNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("noteB").get("noteB"));
+    assertNotNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("noteA", "anonymous").get("noteA"));
+    assertNotNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("noteB", "anonymous").get("noteB"));
 
     // when
     loaderA.close();
     loaderB.close();
 
     // interpreters are destroyed after close
-    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("noteA").get("noteA"));
-    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("noteB").get("noteB"));
+    assertNull(loaderA.getInterpreterSettings().get(0).getInterpreterGroup("noteA", "anonymous").get("noteA"));
+    assertNull(loaderB.getInterpreterSettings().get(0).getInterpreterGroup("noteB", "anonymous").get("noteB"));
   }
 
 

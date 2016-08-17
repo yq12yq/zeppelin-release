@@ -96,7 +96,7 @@ public class NotebookServerTest extends AbstractTestRestApi {
     List<InterpreterSetting> settings = note1.getNoteReplLoader().getInterpreterSettings();
     for (InterpreterSetting setting : settings) {
       if (setting.getName().equals("md")) {
-        interpreterGroup = setting.getInterpreterGroup("sharedProcess");
+        interpreterGroup = setting.getInterpreterGroup("sharedProcess", "anonymous");
         break;
       }
     }

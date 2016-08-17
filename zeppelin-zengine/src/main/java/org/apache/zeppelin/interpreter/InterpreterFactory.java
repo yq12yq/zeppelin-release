@@ -440,6 +440,34 @@ public class InterpreterFactory implements InterpreterGroupFactory {
     return defaultSettings;
   }
 
+  private InterpreterSetting getDefaultInterpreterSetting(List<InterpreterSetting> settings) {
+    if (settings == null || settings.isEmpty()) {
+      return null;
+    }
+    return settings.get(0);
+  }
+
+  public InterpreterSetting getInterpreterSetting(String noteId) {
+    return getDefaultInterpreterSetting(getInterpreterSettings(noteId));
+  }
+
+  public List<InterpreterSetting> getInterpreterSettings(String noteId) {
+    List<String> interpreterSettingIds = getNoteInterpreterSettingBinding(noteId);
+    LinkedList<InterpreterSetting> settings = new LinkedList<>();
+    synchronized (interpreterSettingIds) {
+      for (String id : interpreterSettingIds) {
+        InterpreterSetting setting = get(id);
+        if (setting == null) {
+          // interpreter setting is removed from factory. remove id from here, too
+          interpreterSettingIds.remove(id);
+        } else {
+          settings.add(setting);
+        }
+      }
+    }
+    return settings;
+  }
+
   public List<RegisteredInterpreter> getRegisteredInterpreterList() {
     List<RegisteredInterpreter> registeredInterpreters = new LinkedList<RegisteredInterpreter>();
 
@@ -531,11 +559,11 @@ public class InterpreterFactory implements InterpreterGroupFactory {
   }
 
   public void removeInterpretersForNote(InterpreterSetting interpreterSetting,
-                                        String noteId) {
+                                        String noteId, String userName) {
     if (interpreterSetting.getOption().isPerNoteProcess()) {
       interpreterSetting.closeAndRemoveInterpreterGroup(noteId);
     } else if (interpreterSetting.getOption().isPerNoteSession()) {
-      InterpreterGroup interpreterGroup = interpreterSetting.getInterpreterGroup(noteId);
+      InterpreterGroup interpreterGroup = interpreterSetting.getInterpreterGroup(noteId, userName);
 
       interpreterGroup.close(noteId);
       interpreterGroup.destroy(noteId);
@@ -552,8 +580,9 @@ public class InterpreterFactory implements InterpreterGroupFactory {
   public void createInterpretersForNote(
       InterpreterSetting interpreterSetting,
       String noteId,
-      String key) {
-    InterpreterGroup interpreterGroup = interpreterSetting.getInterpreterGroup(noteId);
+      String key,
+      String userName) {
+    InterpreterGroup interpreterGroup = interpreterSetting.getInterpreterGroup(noteId, userName);
     String groupName = interpreterSetting.getGroup();
     InterpreterOption option = interpreterSetting.getOption();
     Properties properties = interpreterSetting.getProperties();
@@ -599,7 +628,9 @@ public class InterpreterFactory implements InterpreterGroupFactory {
                 key,
                 info.getClassName(),
                 properties,
-                interpreterSetting.id());
+                interpreterSetting.id(),
+                userName,
+                interpreterSetting.getOption().isUserImpersonate());
           } else {
             intp = createRepl(info.getPath(),
                 info.getClassName(),
@@ -698,7 +729,7 @@ public class InterpreterFactory implements InterpreterGroupFactory {
   }
 
   public void putNoteInterpreterSettingBinding(String noteId,
-      List<String> settingList) throws IOException {
+      List<String> settingList, String userName) throws IOException {
     List<String> unBindedSettings = new LinkedList<String>();
 
     synchronized (interpreterSettings) {
@@ -715,17 +746,17 @@ public class InterpreterFactory implements InterpreterGroupFactory {
 
       for (String settingId : unBindedSettings) {
         InterpreterSetting setting = get(settingId);
-        removeInterpretersForNote(setting, noteId);
+        removeInterpretersForNote(setting, noteId, userName);
       }
     }
   }
 
-  public void removeNoteInterpreterSettingBinding(String noteId) {
+  public void removeNoteInterpreterSettingBinding(String noteId, String userName) {
     synchronized (interpreterSettings) {
       List<String> settingIds = (interpreterBindings.containsKey(noteId) ?
           interpreterBindings.remove(noteId) : Collections.<String>emptyList());
       for (String settingId : settingIds) {
-        this.removeInterpretersForNote(get(settingId), noteId);
+        this.removeInterpretersForNote(get(settingId), noteId, userName);
       }
     }
   }
@@ -897,8 +928,9 @@ public class InterpreterFactory implements InterpreterGroupFactory {
   }
 
 
-  private Interpreter createRemoteRepl(String interpreterPath, String noteId, String className,
-      Properties property, String interpreterSettingId) {
+  private Interpreter createRemoteRepl(String interpreterPath, String noteId,
+      String className, Properties property, String interpreterSettingId, String userName,
+      Boolean isUserImpersonate) {
     int connectTimeout = conf.getInt(ConfVars.ZEPPELIN_INTERPRETER_CONNECT_TIMEOUT);
     String localRepoPath = conf.getInterpreterLocalRepoPath() + "/" + interpreterSettingId;
     int maxPoolSize = conf.getInt(ConfVars.ZEPPELIN_INTERPRETER_MAX_POOL_SIZE);
@@ -908,7 +940,8 @@ public class InterpreterFactory implements InterpreterGroupFactory {
     LazyOpenInterpreter intp = new LazyOpenInterpreter(new RemoteInterpreter(
         property, noteId, className, conf.getInterpreterRemoteRunnerPath(),
         interpreterPath, localRepoPath, connectTimeout,
-        maxPoolSize, remoteInterpreterProcessListener));
+        maxPoolSize, remoteInterpreterProcessListener, userName,
+        isUserImpersonate));
     return intp;
   }
 

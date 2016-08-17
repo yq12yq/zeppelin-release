@@ -17,14 +17,10 @@
 
 package org.apache.zeppelin.interpreter;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.lang.NullArgumentException;
 import org.apache.zeppelin.dep.Dependency;
-import org.apache.zeppelin.display.AngularObjectRegistry;
-import org.apache.zeppelin.interpreter.remote.RemoteAngularObjectRegistry;
 import org.apache.zeppelin.notebook.utility.IdHashes;
+
+import java.util.*;
 
 /**
  * Interpreter settings
@@ -123,18 +119,25 @@ public class InterpreterSetting {
   }
 
 
-  private String getInterpreterProcessKey(String noteId) {
+  private String getInterpreterProcessKey(String noteId, String userName) {
+    String returnString;
     if (getOption().isExistingProcess) {
-      return Constants.EXISTING_PROCESS;
+      returnString = Constants.EXISTING_PROCESS;
     } else if (getOption().isPerNoteProcess()) {
-      return noteId;
+      returnString = noteId;
     } else {
-      return SHARED_PROCESS;
+      returnString = SHARED_PROCESS;
     }
+
+    if (getOption().isUserImpersonate() && !userName.equals("anonymous")) {
+      returnString = returnString + userName;
+    }
+
+    return returnString;
   }
 
-  public InterpreterGroup getInterpreterGroup(String noteId) {
-    String key = getInterpreterProcessKey(noteId);
+  public InterpreterGroup getInterpreterGroup(String noteId, String userName) {
+    String key = getInterpreterProcessKey(noteId, userName);
     synchronized (interpreterGroupRef) {
       if (!interpreterGroupRef.containsKey(key)) {
         String interpreterGroupId = id() + ":" + key;
@@ -153,10 +156,10 @@ public class InterpreterSetting {
   }
 
   public void closeAndRemoveInterpreterGroup(String noteId) {
-    String key = getInterpreterProcessKey(noteId);
+//    String key = getInterpreterProcessKey(noteId, userName);
     InterpreterGroup groupToRemove;
     synchronized (interpreterGroupRef) {
-      groupToRemove = interpreterGroupRef.remove(key);
+      groupToRemove = interpreterGroupRef.remove(noteId);
     }
 
     if (groupToRemove != null) {

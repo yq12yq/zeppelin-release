@@ -107,7 +107,7 @@ public class VFSNotebookRepoTest implements JobListenerFactory {
   @Test
   public void testSaveNotebook() throws IOException, InterruptedException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     Paragraph p1 = note.addParagraph();
     Map<String, Object> config = p1.getConfig();

@@ -105,7 +105,7 @@ public class NotebookTest implements JobListenerFactory{
   @Test
   public void testSelectingReplImplementation() throws IOException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     // run with defatul repl
     Paragraph p1 = note.addParagraph();
@@ -213,7 +213,7 @@ public class NotebookTest implements JobListenerFactory{
   @Test
   public void testRunAll() throws IOException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     // p1
     Paragraph p1 = note.addParagraph();
@@ -252,7 +252,7 @@ public class NotebookTest implements JobListenerFactory{
   public void testSchedule() throws InterruptedException, IOException{
     // create a note and a paragraph
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     Paragraph p = note.addParagraph();
     Map config = new HashMap<String, Object>();
@@ -284,7 +284,7 @@ public class NotebookTest implements JobListenerFactory{
   public void testAutoRestartInterpreterAfterSchedule() throws InterruptedException, IOException{
     // create a note and a paragraph
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
     
     Paragraph p = note.addParagraph();
     Map config = new HashMap<String, Object>();
@@ -305,11 +305,11 @@ public class NotebookTest implements JobListenerFactory{
 
 
     MockInterpreter1 mock1 = ((MockInterpreter1) (((ClassloaderInterpreter)
-        ((LazyOpenInterpreter) note.getNoteReplLoader().get("mock1")).getInnerInterpreter())
+        ((LazyOpenInterpreter) note.getNoteReplLoader().get("mock1", "anonymous")).getInnerInterpreter())
         .getInnerInterpreter()));
 
     MockInterpreter2 mock2 = ((MockInterpreter2) (((ClassloaderInterpreter)
-        ((LazyOpenInterpreter) note.getNoteReplLoader().get("mock2")).getInnerInterpreter())
+        ((LazyOpenInterpreter) note.getNoteReplLoader().get("mock2", "anonymous")).getInnerInterpreter())
         .getInnerInterpreter()));
 
     // wait until interpreters are started
@@ -336,7 +336,7 @@ public class NotebookTest implements JobListenerFactory{
   public void testExportAndImportNote() throws IOException, CloneNotSupportedException,
           InterruptedException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     final Paragraph p = note.addParagraph();
     String simpleText = "hello world";
@@ -363,7 +363,7 @@ public class NotebookTest implements JobListenerFactory{
   public void testCloneNote() throws IOException, CloneNotSupportedException,
       InterruptedException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     final Paragraph p = note.addParagraph();
     p.setText("hello world");
@@ -385,7 +385,7 @@ public class NotebookTest implements JobListenerFactory{
   public void testCloneNoteWithExceptionResult() throws IOException, CloneNotSupportedException,
       InterruptedException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     final Paragraph p = note.addParagraph();
     p.setText("hello world");
@@ -408,7 +408,7 @@ public class NotebookTest implements JobListenerFactory{
   @Test
   public void testResourceRemovealOnParagraphNoteRemove() throws IOException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
     for (InterpreterGroup intpGroup : InterpreterGroup.getAll()) {
       intpGroup.setResourcePool(new LocalResourcePool(intpGroup.getId()));
     }
@@ -437,10 +437,10 @@ public class NotebookTest implements JobListenerFactory{
       IOException {
     // create a note and a paragraph
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     AngularObjectRegistry registry = note.getNoteReplLoader()
-        .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess")
+        .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess", "anonymous")
         .getAngularObjectRegistry();
 
     Paragraph p1 = note.addParagraph();
@@ -470,10 +470,10 @@ public class NotebookTest implements JobListenerFactory{
       IOException {
     // create a note and a paragraph
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     AngularObjectRegistry registry = note.getNoteReplLoader()
-        .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess")
+        .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess", "anonymous")
         .getAngularObjectRegistry();
 
     Paragraph p1 = note.addParagraph();
@@ -503,10 +503,10 @@ public class NotebookTest implements JobListenerFactory{
       IOException {
     // create a note and a paragraph
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     AngularObjectRegistry registry = note.getNoteReplLoader()
-        .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess")
+        .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess", "anonymous")
         .getAngularObjectRegistry();
 
     // add local scope object
@@ -517,7 +517,7 @@ public class NotebookTest implements JobListenerFactory{
     // restart interpreter
     factory.restart(note.getNoteReplLoader().getInterpreterSettings().get(0).id());
     registry = note.getNoteReplLoader()
-    .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess")
+    .getInterpreterSettings().get(0).getInterpreterGroup("sharedProcess", "anonymous")
     .getAngularObjectRegistry();
 
     // local and global scope object should be removed
@@ -575,7 +575,7 @@ public class NotebookTest implements JobListenerFactory{
   public void testAbortParagraphStatusOnInterpreterRestart() throws InterruptedException,
       IOException {
     Note note = notebook.createNote(null);
-    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList());
+    note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     ArrayList<Paragraph> paragraphs = new ArrayList<>();
     for (int i = 0; i < 100; i++) {

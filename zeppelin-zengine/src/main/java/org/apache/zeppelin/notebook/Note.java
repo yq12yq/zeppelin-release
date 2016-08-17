@@ -17,14 +17,7 @@
 
 package org.apache.zeppelin.notebook;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
+import com.google.gson.Gson;
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.display.AngularObject;
 import org.apache.zeppelin.display.AngularObjectRegistry;
@@ -39,12 +32,17 @@ import org.apache.zeppelin.scheduler.Job;
 import org.apache.zeppelin.scheduler.Job.Status;
 import org.apache.zeppelin.scheduler.JobListener;
 import org.apache.zeppelin.search.SearchService;
-
-import com.google.gson.Gson;
 import org.apache.zeppelin.user.AuthenticationInfo;
 import org.apache.zeppelin.user.Credentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Binded interpreters for a note
@@ -402,7 +400,7 @@ public class Note implements Serializable, JobListener {
         p.setAuthenticationInfo(authenticationInfo);
         p.setNoteReplLoader(replLoader);
         p.setListener(jobListenerFactory.getParagraphJobListener(this));
-        Interpreter intp = replLoader.get(p.getRequiredReplName());
+        Interpreter intp = replLoader.get(p.getRequiredReplName(), authenticationInfo.getUser());
         intp.getScheduler().submit(p);
       }
     }
@@ -418,10 +416,14 @@ public class Note implements Serializable, JobListener {
     p.setNoteReplLoader(replLoader);
     p.setListener(jobListenerFactory.getParagraphJobListener(this));
     String requiredReplName = p.getRequiredReplName();
-    Interpreter intp = replLoader.get(requiredReplName);
+    String user = getParagraph(paragraphId).getAuthenticationInfo().getUser();
+    if (user == null) {
+      user = "anonymous";
+    }
+    Interpreter intp = replLoader.get(requiredReplName, user);
     if (intp == null) {
       // TODO(jongyoul): Make "%jdbc" configurable from JdbcInterpreter
-      if (conf.getUseJdbcAlias() && null != (intp = replLoader.get("jdbc"))) {
+      if (conf.getUseJdbcAlias() && null != (intp = replLoader.get("jdbc", user))) {
         String pText = p.getText().replaceFirst(requiredReplName, "jdbc(" + requiredReplName + ")");
         logger.debug("New paragraph: {}", pText);
         p.setEffectiveText(pText);
@@ -465,7 +467,7 @@ public class Note implements Serializable, JobListener {
     }
   }
 
-  private void snapshotAngularObjectRegistry() {
+  private void snapshotAngularObjectRegistry(AuthenticationInfo subject) {
     angularObjects = new HashMap<>();
 
     List<InterpreterSetting> settings = replLoader.getInterpreterSettings();
@@ -474,7 +476,8 @@ public class Note implements Serializable, JobListener {
     }
 
     for (InterpreterSetting setting : settings) {
-      InterpreterGroup intpGroup = setting.getInterpreterGroup(id);
+      InterpreterGroup intpGroup = setting.getInterpreterGroup(id,
+          subject == null ? "anonymous" : subject.getUser());
       AngularObjectRegistry registry = intpGroup.getAngularObjectRegistry();
       angularObjects.put(intpGroup.getId(), registry.getAllWithGlobal(id));
     }
@@ -489,7 +492,8 @@ public class Note implements Serializable, JobListener {
     }
 
     for (InterpreterSetting setting : settings) {
-      InterpreterGroup intpGroup = setting.getInterpreterGroup(id);
+      InterpreterGroup intpGroup = setting.getInterpreterGroup(id,
+          getParagraph(paragraphId).getAuthenticationInfo().getUser());
       AngularObjectRegistry registry = intpGroup.getAngularObjectRegistry();
 
       if (registry instanceof RemoteAngularObjectRegistry) {
@@ -503,7 +507,7 @@ public class Note implements Serializable, JobListener {
 
   public void persist(AuthenticationInfo subject) throws IOException {
     stopDelayedPersistTimer();
-    snapshotAngularObjectRegistry();
+    snapshotAngularObjectRegistry(subject);
     index.updateIndexDoc(this);
     repo.save(this, subject);
   }

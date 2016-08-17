@@ -50,8 +50,8 @@ public class NoteInterpreterLoader {
    * @param ids InterpreterSetting id list
    * @throws IOException
    */
-  public void setInterpreters(List<String> ids) throws IOException {
-    factory.putNoteInterpreterSettingBinding(noteId, ids);
+  public void setInterpreters(List<String> ids, String userName) throws IOException {
+    factory.putNoteInterpreterSettingBinding(noteId, ids, userName);
   }
 
   public List<String> getInterpreters() {
@@ -85,13 +85,14 @@ public class NoteInterpreterLoader {
     }
   }
 
-  private List<Interpreter> createOrGetInterpreterList(InterpreterSetting setting) {
+  private List<Interpreter> createOrGetInterpreterList(InterpreterSetting setting,
+      String userName) {
     InterpreterGroup interpreterGroup =
-        setting.getInterpreterGroup(noteId);
+        setting.getInterpreterGroup(noteId, userName);
     synchronized (interpreterGroup) {
       String key = getInterpreterInstanceKey(setting);
       if (!interpreterGroup.containsKey(key)) {
-        factory.createInterpretersForNote(setting, noteId, key);
+        factory.createInterpretersForNote(setting, noteId, key, userName);
       }
       return interpreterGroup.get(getInterpreterInstanceKey(setting));
     }
@@ -106,11 +107,11 @@ public class NoteInterpreterLoader {
 
     System.err.println("close");
     for (InterpreterSetting setting : settings) {
-      factory.removeInterpretersForNote(setting, noteId);
+      factory.removeInterpretersForNote(setting, noteId, "anonymous");
     }
   }
 
-  public Interpreter get(String replName) {
+  public Interpreter get(String replName, String userName) {
     List<InterpreterSetting> settings = getInterpreterSettings();
 
     if (settings == null || settings.size() == 0) {
@@ -120,7 +121,7 @@ public class NoteInterpreterLoader {
     if (replName == null || replName.trim().length() == 0) {
       // get default settings (first available)
       InterpreterSetting defaultSettings = settings.get(0);
-      return createOrGetInterpreterList(defaultSettings).get(0);
+      return createOrGetInterpreterList(defaultSettings, userName).get(0);
     }
 
     if (Interpreter.registeredInterpreters == null) {
@@ -144,7 +145,7 @@ public class NoteInterpreterLoader {
 
       for (InterpreterSetting setting : settings) {
         if (registeredInterpreter.getGroup().equals(setting.getGroup())) {
-          List<Interpreter> intpGroup = createOrGetInterpreterList(setting);
+          List<Interpreter> intpGroup = createOrGetInterpreterList(setting, userName);
           for (Interpreter interpreter : intpGroup) {
             if (interpreterClassName.equals(interpreter.getClassName())) {
               return interpreter;
@@ -160,7 +161,7 @@ public class NoteInterpreterLoader {
       Interpreter.RegisteredInterpreter registeredInterpreter =
           Interpreter.registeredInterpreters.get(defaultSetting.getGroup() + "." + replName);
       if (registeredInterpreter != null) {
-        List<Interpreter> interpreters = createOrGetInterpreterList(defaultSetting);
+        List<Interpreter> interpreters = createOrGetInterpreterList(defaultSetting, userName);
         for (Interpreter interpreter : interpreters) {
 
           RegisteredInterpreter intp =
@@ -182,7 +183,7 @@ public class NoteInterpreterLoader {
       // search interpreter group and return first interpreter.
       for (InterpreterSetting setting : settings) {
         if (setting.getGroup().equals(replName)) {
-          List<Interpreter> interpreters = createOrGetInterpreterList(setting);
+          List<Interpreter> interpreters = createOrGetInterpreterList(setting, userName);
           return interpreters.get(0);
         }
       }

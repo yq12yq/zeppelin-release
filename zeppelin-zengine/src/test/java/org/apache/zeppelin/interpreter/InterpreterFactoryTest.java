@@ -84,8 +84,8 @@ public class InterpreterFactoryTest {
   public void testBasic() {
     List<String> all = factory.getDefaultInterpreterSettingList();
     InterpreterSetting setting = factory.get(all.get(0));
-    InterpreterGroup interpreterGroup = setting.getInterpreterGroup("sharedProcess");
-    factory.createInterpretersForNote(setting, "sharedProcess", "session");
+    InterpreterGroup interpreterGroup = setting.getInterpreterGroup("sharedProcess", "anonymous");
+    factory.createInterpretersForNote(setting, "sharedProcess", "session", "anonymous");
 
     // get interpreter
     assertNotNull("get Interpreter", interpreterGroup.get("session").get(0));
@@ -95,7 +95,7 @@ public class InterpreterFactoryTest {
 
     // restart interpreter
     factory.restart(all.get(0));
-    assertNull(setting.getInterpreterGroup("sharedProcess").get("session"));
+    assertNull(setting.getInterpreterGroup("sharedProcess", "anonymous").get("session"));
   }
 
   @Test
