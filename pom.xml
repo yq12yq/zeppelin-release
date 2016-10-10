@@ -15,9 +15,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.maven-v4_0_0.xsd">
 
   <!-- Licensed to the Apache Software Foundation (ASF) under one or more
     contributor license agreements. See the NOTICE file distributed with this
@@ -35,7 +33,7 @@
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin</artifactId>
   <packaging>pom</packaging>
-  <version>0.6.0-incubating-SNAPSHOT</version>
+  <version>0.6.0.2.4.4.0-10</version>
   <name>Zeppelin</name>
   <description>Zeppelin project</description>
   <url>http://zeppelin.incubator.apache.org/</url>
@@ -425,7 +423,7 @@
             <id>enforce</id>
             <configuration>
               <rules>
-                <DependencyConvergence/>
+                <DependencyConvergence />
               </rules>
               <failFast>true</failFast>
             </configuration>
@@ -636,7 +634,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore/>
+                    <ignore />
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -656,7 +654,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
               </pluginExecutions>

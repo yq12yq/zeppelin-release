@@ -15,21 +15,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>zeppelin</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.6.0-incubating-SNAPSHOT</version>
+    <version>0.6.0.2.4.4.0-10</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-spark</artifactId>
   <packaging>jar</packaging>
-  <version>0.6.0-incubating-SNAPSHOT</version>
+  <version>0.6.0.2.4.4.0-10</version>
   <name>Zeppelin: Spark</name>
   <description>Zeppelin spark support</description>
   <url>http://zeppelin.incubator.apache.org</url>
@@ -38,7 +37,7 @@
     <jsoup.version>1.8.2</jsoup.version>
     <mockito.version>1.10.19</mockito.version>
     <powermock.version>1.6.4</powermock.version>
-    <spark.version>1.4.1</spark.version>
+    <spark.version>1.6.2.2.4.4.0-10</spark.version>
     <scala.version>2.10.4</scala.version>
     <scala.binary.version>2.10</scala.binary.version>
   </properties>
@@ -355,7 +354,7 @@
             </filter>
           </filters>
           <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
             <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
               <resource>reference.conf</resource>
             </transformer>

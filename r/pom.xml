@@ -15,15 +15,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>zeppelin</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.6.0-incubating-SNAPSHOT</version>
+    <version>0.6.0.2.4.4.0-10</version>
     <relativePath>..</relativePath>
   </parent>
 
@@ -35,7 +33,7 @@
   <properties>
     <script.extension>.sh</script.extension>
     <path.separator>/</path.separator>
-    <spark.version>1.4.1</spark.version>
+    <spark.version>1.6.2.2.4.4.0-10</spark.version>
     <scala.version>2.10.4</scala.version>
     <scala.binary.version>2.10</scala.binary.version>
   </properties>
@@ -284,7 +282,7 @@
             </filter>
           </filters>
           <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
             <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
               <resource>reference.conf</resource>
             </transformer>
