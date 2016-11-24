@@ -80,6 +80,11 @@
         "propertyName": "zeppelin.livy.keytab",
         "defaultValue": "",
         "description": "Kerberos keytab to authenticate livy"
+      },
+      "livy.spark.displayAppInfo": {
+        "propertyName": "zeppelin.livy.displayAppInfo",
+        "defaultValue": "false",
+        "description": "Whether display app info"
       }
     }
   },
