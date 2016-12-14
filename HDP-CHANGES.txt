@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+BUG-70598.     Support Spark2 in livy interpreter
 ZEPPELIN-1473. It is not necessary to create SQLContext in LivyInterpreter
 ZEPPELIN-1400. Use relative path to the interpreter setting page
 ZEPPELIN-1320: Run zeppelin interpreter process as web front end user

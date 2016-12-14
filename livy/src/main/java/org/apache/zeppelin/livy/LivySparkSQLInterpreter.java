@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -38,11 +39,15 @@ public class LivySparkSQLInterpreter extends Interpreter {
 
   protected Map<String, Integer> userSessionMap;
   private LivyHelper livyHelper;
+  private AtomicBoolean sparkVersionDetected = new AtomicBoolean(false);
+  private AtomicBoolean isSpark2 = new AtomicBoolean(false);
+  private int maxResult;
 
   public LivySparkSQLInterpreter(Properties property) {
     super(property);
     livyHelper = new LivyHelper(property);
     userSessionMap = LivySparkInterpreter.getUserSessionMap();
+    maxResult = Integer.parseInt(property.getProperty("zeppelin.livy.spark.sql.maxResult"));
   }
 
   @Override
@@ -75,12 +80,50 @@ public class LivySparkSQLInterpreter extends Interpreter {
         return new InterpreterResult(InterpreterResult.Code.SUCCESS, "");
       }
 
-      InterpreterResult res = livyHelper.interpret("sqlContext.sql(\"" +
-              line.replaceAll("\"", "\\\\\"")
-                  .replaceAll("\\n", " ")
-              + "\").show(" +
-              property.get("zeppelin.livy.spark.sql.maxResult") + ")",
-          interpreterContext, userSessionMap);
+      if (!sparkVersionDetected.getAndSet(true)) {
+        // As we don't know whether livyserver use spark2 or spark1, so we will detect SparkSession
+        // to judge whether it is using spark2.
+        try {
+          InterpreterResult result = livyHelper.interpret("spark", interpreterContext,
+              userSessionMap);
+          if (result.code() == InterpreterResult.Code.SUCCESS &&
+              result.message().contains("org.apache.spark.sql.SparkSession")) {
+            LOGGER.info("SparkSession is detected so we are using spark 2.x for session {}",
+                userSessionMap.get(interpreterContext.getAuthenticationInfo().getUser()));
+            isSpark2.set(true);
+          } else {
+            // spark 1.x
+            result = livyHelper.interpret("sqlContext", interpreterContext,
+                userSessionMap);
+            if (result.code() == InterpreterResult.Code.SUCCESS) {
+              LOGGER.info("sqlContext is detected.");
+            } else if (result.code() == InterpreterResult.Code.ERROR) {
+              // create SqlContext if it is not available, as in livy 0.2 sqlContext
+              // is not available.
+              LOGGER.info("sqlContext is not detected, try to create SQLContext by ourselves");
+              result = livyHelper.interpret(
+                  "val sqlContext = new org.apache.spark.sql.SQLContext(sc)\n"
+                      + "import sqlContext.implicits._", interpreterContext, userSessionMap);
+              if (result.code() == InterpreterResult.Code.ERROR) {
+                throw new Exception("Fail to create SQLContext," + result.message());
+              }
+            }
+          }
+        } catch (Exception e) {
+          throw new RuntimeException("Fail to Detect SparkVersion", e);
+        }
+      }
+
+      // replace line separator with space
+      line = line.replace("\n", " ").replace("\r", " ");
+      String sqlQuery = null;
+      if (isSpark2.get()) {
+        sqlQuery = "spark.sql(\"" + line + "\").show(" + maxResult + ")";
+      } else {
+        sqlQuery = "sqlContext.sql(\"" + line + "\").show(" + maxResult + ")";
+      }
+
+      InterpreterResult res = livyHelper.interpret(sqlQuery, interpreterContext, userSessionMap);
 
       if (res.code() == InterpreterResult.Code.SUCCESS) {
         StringBuilder resMsg = new StringBuilder();
