@@ -114,13 +114,12 @@ public class LivySparkSQLInterpreter extends Interpreter {
         }
       }
 
-      // replace line separator with space
-      line = line.replace("\n", " ").replace("\r", " ");
+      // use triple quote so that we don't need to do string escape.
       String sqlQuery = null;
       if (isSpark2.get()) {
-        sqlQuery = "spark.sql(\"" + line + "\").show(" + maxResult + ")";
+        sqlQuery = "spark.sql(\"\"\"" + line + "\"\"\").show(" + maxResult + ")";
       } else {
-        sqlQuery = "sqlContext.sql(\"" + line + "\").show(" + maxResult + ")";
+        sqlQuery = "sqlContext.sql(\"\"\"" + line + "\"\"\").show(" + maxResult + ")";
       }
 
       InterpreterResult res = livyHelper.interpret(sqlQuery, interpreterContext, userSessionMap);

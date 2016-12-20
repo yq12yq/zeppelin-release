@@ -63,8 +63,7 @@ public class LivyHelperTest {
     livyHelper.property = properties;
     livyHelper.paragraphHttpMap = new HashMap<>();
     livyHelper.gson = new GsonBuilder().setPrettyPrinting().create();
-
-
+    
     doReturn("{\"id\":1,\"state\":\"idle\",\"kind\":\"spark\",\"proxyUser\":\"null\",\"log\":[]}")
         .when(livyHelper)
         .executeHTTP(
