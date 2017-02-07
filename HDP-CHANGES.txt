@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+BUG-73481: User Impersonation fails on setting hive_conf_list in hive interpreter (JDBC)
 ZEPPELIN-1473. It is not necessary to create SQLContext in LivyInterpreter
 ZEPPELIN-1400. Use relative path to the interpreter setting page
 ZEPPELIN-1320: Run zeppelin interpreter process as web front end user
