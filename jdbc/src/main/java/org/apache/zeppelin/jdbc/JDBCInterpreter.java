@@ -221,8 +221,14 @@ public class JDBCInterpreter extends Interpreter {
               connection = DriverManager.getConnection(url, properties);
             } else {
               if ("hive".equalsIgnoreCase(propertyKey)) {
-                connection = DriverManager.getConnection(url + ";hive.server2.proxy.user=" + user,
-                    properties);
+                StringBuilder connectionUrl = new StringBuilder(url);
+                Integer lastIndexOfUrl = connectionUrl.indexOf("?");
+                if (lastIndexOfUrl == -1) {
+                  lastIndexOfUrl = connectionUrl.length();
+                }
+                connectionUrl.insert(lastIndexOfUrl, ";hive.server2.proxy.user=" + user + ";");
+                connection = DriverManager.getConnection(connectionUrl.toString()
+                    + ";hive.server2.proxy.user=" + user, properties);
               } else {
                 UserGroupInformation ugi = null;
                 try {
