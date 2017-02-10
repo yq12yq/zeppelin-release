@@ -227,8 +227,7 @@ public class JDBCInterpreter extends Interpreter {
                   lastIndexOfUrl = connectionUrl.length();
                 }
                 connectionUrl.insert(lastIndexOfUrl, ";hive.server2.proxy.user=" + user + ";");
-                connection = DriverManager.getConnection(connectionUrl.toString()
-                    + ";hive.server2.proxy.user=" + user, properties);
+                connection = DriverManager.getConnection(connectionUrl.toString(), properties);
               } else {
                 UserGroupInformation ugi = null;
                 try {
