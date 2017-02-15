@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.0 Apache Release
 
+ZEPPELIN-2063  Hive Jdbc interpreter does not relogin if kerberos ticket expired when hive.server2.transport.mode is http
 ZEPPELIN-2062  Hive proxy user doesn't work if interpreter name is not JDBC.
 ZEPPELIN-2068  Change interpreter.json & credentials.json permission to 600.
 ZEPPELIN-2083  default interpreter list should honour order of zeppelin.interpreters property in
