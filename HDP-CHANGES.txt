@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.0 Apache Release
 
+BUG-74897      Include Spark 2 Lab Notebooks with Zeppelin in HDP 2.6
 BUG-74684      ZEPPELIN-2116. livy interpreter needs to restart after previous session timeout in secured cluster
 BUG-74686      ZEPPELIN-2108. livy job cancellation throws NPE
 BUG-73354      Zeppelin ui was unreachable till 2 minutes after it was restarted
