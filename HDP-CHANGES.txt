@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.0 Apache Release
 
+BUG-75793       Zeppelin sample notebooks should not create sqlContext explicitly
 BUG-75247       Incorrect doc link in Zeppelin UI
 BUG-74897       Include Spark 2 Lab Notebooks with Zeppelin in HDP 2.6
 BUG-74684       ZEPPELIN-2116. livy interpreter needs to restart after previous session timeout in secured cluster
