@@ -1,5 +1,13 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.0 Apache Release
 
+ZEPPELIN-2173   Duplicate user names populated in the Note permission box.
+ZEPPELIN-2133   All interpreters sometimes throw random Connection refuse errors.
+ZEPPELIN-1725   replace cleanDirectory with forceDelete.
+ZEPPELIN-2164   Typo in Insufficient Privileges popup of Zeppelin.
+ZEPPELIN-2147   zeppelin should redirect to login page after browser … …session expires.
+ZEPPELIN-2105   yarn installed by frontend-maven-plugin causes build failure (BUG).
+ZEPPELIN-2084   z.show doesn't show dataframe.
+ZEPPELIN-2045   Pass interpreter properties with "spark." as prefix to SparkConf.
 BUG-75793       Zeppelin sample notebooks should not create sqlContext explicitly
 BUG-75247       Incorrect doc link in Zeppelin UI
 BUG-74897       Include Spark 2 Lab Notebooks with Zeppelin in HDP 2.6
