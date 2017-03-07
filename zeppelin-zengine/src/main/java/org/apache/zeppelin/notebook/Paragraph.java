@@ -155,8 +155,6 @@ public class Paragraph extends Job implements Serializable, Cloneable {
 
   public void addUser(Paragraph p, String user) {
     userParagraphMap.put(user, p);
-
-    return p;
   }
 
   public String getUser() {
