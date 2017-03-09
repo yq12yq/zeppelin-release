@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.0 Apache Release
 
+BUG-76368       Sample notebooks need to use %spark.spark or %spark2.spark instead of just using %spark/ %spark2
 ZEPPELIN-2172   Redirect to home if notebook authentication fails in realtime.
 ZEPPELIN-2178   Prevent from cleaning output in "Personalized Mode".
 ZEPPELIN-2094   Decrease npm install retry time (for branch-0.7).
