@@ -131,11 +131,7 @@ public class ZeppelinServer extends Application {
         heliumApplicationFactory);
 
     // create visualization bundle
-    try {
-      heliumVisualizationFactory.bundle(helium.getVisualizationPackagesToBundle());
-    } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
-    }
+    bundleHeliumVisualizationFactoryInBackground(heliumVisualizationFactory);
 
     this.schedulerFactory = new SchedulerFactory();
     this.interpreterSettingManager = new InterpreterSettingManager(conf, depResolver,
@@ -158,6 +154,22 @@ public class ZeppelinServer extends Application {
 
     notebook.addNotebookEventListener(heliumApplicationFactory);
     notebook.addNotebookEventListener(notebookWsServer.getNotebookInformationListener());
+  }
+
+  public static void bundleHeliumVisualizationFactoryInBackground(final HeliumVisualizationFactory
+      heliumVisualizationFactory) {
+
+    Thread t = new Thread() {
+      public void run() {
+        try {
+          heliumVisualizationFactory.bundle(helium.getVisualizationPackagesToBundle());
+        } catch (Exception e) {
+          LOG.error(e.getMessage(), e);
+
+        }
+      }
+    };
+    t.start();
   }
 
   public static void main(String[] args) throws InterruptedException {
