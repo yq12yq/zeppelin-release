@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.apache.thrift.TException;
 import org.apache.thrift.transport.TTransportException;
 import org.apache.zeppelin.interpreter.Constants;
+import org.apache.zeppelin.interpreter.InterpreterException;
 import org.apache.zeppelin.interpreter.InterpreterGroup;
 import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService.Client;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class RemoteInterpreterProcessTest {
     InterpreterGroup intpGroup = new InterpreterGroup();
     RemoteInterpreterManagedProcess rip = new RemoteInterpreterManagedProcess(
         INTERPRETER_SCRIPT, "nonexists", "fakeRepo", new HashMap<String, String>(),
-        10 * 1000, null, null);
+        10 * 1000, null, null,"fakeName");
     assertFalse(rip.isRunning());
     assertEquals(0, rip.referenceCount());
     assertEquals(1, rip.reference(intpGroup, "anonymous", false));
@@ -60,7 +61,7 @@ public class RemoteInterpreterProcessTest {
     InterpreterGroup intpGroup = new InterpreterGroup();
     RemoteInterpreterManagedProcess rip = new RemoteInterpreterManagedProcess(
         INTERPRETER_SCRIPT, "nonexists", "fakeRepo", new HashMap<String, String>(),
-        mock(RemoteInterpreterEventPoller.class), 10 * 1000);
+        mock(RemoteInterpreterEventPoller.class), 10 * 1000, "fakeName");
     rip.reference(intpGroup, "anonymous", false);
     assertEquals(0, rip.getNumActiveClient());
     assertEquals(0, rip.getNumIdleClient());
@@ -103,7 +104,8 @@ public class RemoteInterpreterProcessTest {
         "fakeRepo",
         new HashMap<String, String>(),
         mock(RemoteInterpreterEventPoller.class)
-        , 10 * 1000);
+        , 10 * 1000,
+        "fakeName");
     assertFalse(rip.isRunning());
     assertEquals(0, rip.referenceCount());
     assertEquals(1, rip.reference(intpGroup, "anonymous", false));

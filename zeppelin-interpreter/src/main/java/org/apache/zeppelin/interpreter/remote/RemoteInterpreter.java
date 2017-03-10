@@ -26,7 +26,6 @@ import org.apache.zeppelin.display.GUI;
 import org.apache.zeppelin.helium.ApplicationEventListener;
 import org.apache.zeppelin.display.Input;
 import org.apache.zeppelin.interpreter.*;
-import org.apache.zeppelin.interpreter.InterpreterResult.Type;
 import org.apache.zeppelin.interpreter.thrift.InterpreterCompletion;
 import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext;
 import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterResult;
@@ -63,6 +62,7 @@ public class RemoteInterpreter extends Interpreter {
   private int port;
   private String userName;
   private Boolean isUserImpersonate;
+  private String interpreterGroupName;
 
   /**
    * Remote interpreter and manage interpreter process
@@ -70,7 +70,8 @@ public class RemoteInterpreter extends Interpreter {
   public RemoteInterpreter(Properties property, String sessionKey, String className,
       String interpreterRunner, String interpreterPath, String localRepoPath, int connectTimeout,
       int maxPoolSize, RemoteInterpreterProcessListener remoteInterpreterProcessListener,
-      ApplicationEventListener appListener, String userName, Boolean isUserImpersonate) {
+      ApplicationEventListener appListener, String userName, Boolean isUserImpersonate,
+      String interpreterGroupName) {
     super(property);
     this.sessionKey = sessionKey;
     this.className = className;
@@ -85,6 +86,7 @@ public class RemoteInterpreter extends Interpreter {
     this.applicationEventListener = appListener;
     this.userName = userName;
     this.isUserImpersonate = isUserImpersonate;
+    this.interpreterGroupName = interpreterGroupName;
   }
 
 
@@ -180,7 +182,7 @@ public class RemoteInterpreter extends Interpreter {
           // create new remote process
           remoteProcess = new RemoteInterpreterManagedProcess(
               interpreterRunner, interpreterPath, localRepoPath, env, connectTimeout,
-              remoteInterpreterProcessListener, applicationEventListener);
+              remoteInterpreterProcessListener, applicationEventListener, interpreterGroupName);
         }
 
         intpGroup.setRemoteInterpreterProcess(remoteProcess);
