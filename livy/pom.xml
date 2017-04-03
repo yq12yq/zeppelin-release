@@ -21,14 +21,14 @@
     <parent>
         <artifactId>zeppelin</artifactId>
         <groupId>org.apache.zeppelin</groupId>
-        <version>0.7.0.2.6.0.2-SNAPSHOT</version>
+        <version>0.7.0.2.6.0.3-8</version>
         <relativePath>..</relativePath>
     </parent>
 
     <groupId>org.apache.zeppelin</groupId>
     <artifactId>zeppelin-livy</artifactId>
     <packaging>jar</packaging>
-    <version>0.7.0.2.6.0.2-SNAPSHOT</version>
+    <version>0.7.0.2.6.0.3-8</version>
     <name>Zeppelin: Livy interpreter</name>
 
     <properties>
@@ -479,8 +479,8 @@
             </activation>
             <properties>
                 <livy.version>0.3.0</livy.version>
-                <spark.version>1.6.3.2.6.0.2-SNAPSHOT</spark.version>
-                <hadoop.version>2.7.3.2.6.0.2-SNAPSHOT</hadoop.version>
+                <spark.version>1.6.3.2.6.0.3-8</spark.version>
+                <hadoop.version>2.7.3.2.6.0.3-8</hadoop.version>
             </properties>
             <dependencies>
                 <dependency>
@@ -526,8 +526,8 @@
             <id>livy-0.2</id>
             <properties>
                 <livy.version>0.2.0</livy.version>
-                <spark.version>1.6.3.2.6.0.2-SNAPSHOT</spark.version>
-                <hadoop.version>2.7.3.2.6.0.2-SNAPSHOT</hadoop.version>
+                <spark.version>1.6.3.2.6.0.3-8</spark.version>
+                <hadoop.version>2.7.3.2.6.0.3-8</hadoop.version>
                 <scala.binary.version>2.10</scala.binary.version>
             </properties>
             <dependencies>
