@@ -43,7 +43,12 @@ while getopts "hp:d:l:v:u:" o; do
             getZeppelinVersion
             ;;
         u)
-            ZEPPELIN_SSH_COMMAND="ssh ${OPTARG}@localhost "
+            ZEPPELIN_IMPERSONATE_USER="${OPTARG}"
+            if [[ -z "$ZEPPELIN_IMPERSONATE_CMD" ]]; then
+              ZEPPELIN_IMPERSONATE_RUN_CMD=`echo "ssh ${ZEPPELIN_IMPERSONATE_USER}@localhost" `
+            else
+              ZEPPELIN_IMPERSONATE_RUN_CMD=$(eval "echo ${ZEPPELIN_IMPERSONATE_CMD} ")
+            fi
             ;;
         esac
 done
@@ -149,11 +154,31 @@ addJarInDirForIntp "${LOCAL_INTERPRETER_REPO}"
 
 CLASSPATH+=":${ZEPPELIN_INTP_CLASSPATH}"
 
-if [[ -n "${SPARK_SUBMIT}" ]]; then
-    ${ZEPPELIN_SSH_COMMAND} `${SPARK_SUBMIT} --class ${ZEPPELIN_SERVER} --driver-class-path "${ZEPPELIN_INTP_CLASSPATH_OVERRIDES}:${CLASSPATH}" --driver-java-options "${JAVA_INTP_OPTS}" ${SPARK_SUBMIT_OPTIONS} ${SPARK_APP_JAR} ${PORT} &`
-else
-    ${ZEPPELIN_SSH_COMMAND} ${ZEPPELIN_RUNNER} ${JAVA_INTP_OPTS} ${ZEPPELIN_INTP_MEM} -cp ${ZEPPELIN_INTP_CLASSPATH_OVERRIDES}:${CLASSPATH} ${ZEPPELIN_SERVER} ${PORT} &
+if [[ ! -z "$ZEPPELIN_IMPERSONATE_USER" ]]; then
+    suid="$(id -u ${ZEPPELIN_IMPERSONATE_USER})"
+    if [[ -n  "${suid}" || -z "${SPARK_SUBMIT}" ]]; then
+       INTERPRETER_RUN_COMMAND=${ZEPPELIN_IMPERSONATE_RUN_CMD}" '"
+       if [[ -f "${ZEPPELIN_CONF_DIR}/zeppelin-env.sh" ]]; then
+           INTERPRETER_RUN_COMMAND+=" source "${ZEPPELIN_CONF_DIR}'/zeppelin-env.sh;'
+       fi
+    fi
 fi
+
+if [[ -n "${SPARK_SUBMIT}" ]]; then
+    if [[ -n "$ZEPPELIN_IMPERSONATE_USER" ]] && [[ "$ZEPPELIN_IMPERSONATE_SPARK_PROXY_USER" != "false" ]];  then
+       INTERPRETER_RUN_COMMAND+=' '` echo ${SPARK_SUBMIT} --class ${ZEPPELIN_SERVER} --driver-class-path \"${ZEPPELIN_INTP_CLASSPATH_OVERRIDES}:${CLASSPATH}\" --driver-java-options \"${JAVA_INTP_OPTS}\" ${SPARK_SUBMIT_OPTIONS} --proxy-user ${ZEPPELIN_IMPERSONATE_USER} ${SPARK_APP_JAR} ${PORT}`
+    else
+       INTERPRETER_RUN_COMMAND+=' '` echo ${SPARK_SUBMIT} --class ${ZEPPELIN_SERVER} --driver-class-path \"${ZEPPELIN_INTP_CLASSPATH_OVERRIDES}:${CLASSPATH}\" --driver-java-options \"${JAVA_INTP_OPTS}\" ${SPARK_SUBMIT_OPTIONS} ${SPARK_APP_JAR} ${PORT}`
+    fi
+else
+    INTERPRETER_RUN_COMMAND+=' '` echo ${ZEPPELIN_RUNNER} ${JAVA_INTP_OPTS} ${ZEPPELIN_INTP_MEM} -cp ${ZEPPELIN_INTP_CLASSPATH_OVERRIDES}:${CLASSPATH} ${ZEPPELIN_SERVER} ${PORT} `
+fi
+
+if [[ ! -z "$ZEPPELIN_IMPERSONATE_USER" ]] && [[ -n "${suid}" || -z "${SPARK_SUBMIT}" ]]; then
+    INTERPRETER_RUN_COMMAND+="'"
+fi
+
+eval $INTERPRETER_RUN_COMMAND &
 
 pid=$!
 if [[ -z "${pid}" ]]; then
