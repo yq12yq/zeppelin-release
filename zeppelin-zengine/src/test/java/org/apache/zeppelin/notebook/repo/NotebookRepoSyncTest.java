@@ -42,6 +42,7 @@ import org.apache.zeppelin.scheduler.JobListener;
 import org.apache.zeppelin.scheduler.SchedulerFactory;
 import org.apache.zeppelin.search.SearchService;
 import org.apache.zeppelin.search.LuceneSearch;
+import org.apache.zeppelin.user.AuthenticationInfo;
 import org.apache.zeppelin.user.Credentials;
 import org.junit.After;
 import org.junit.Before;
@@ -137,8 +138,9 @@ public class NotebookRepoSyncTest implements JobListenerFactory {
     assertTrue(notebookRepoSync.getRepoCount() > 1);
     assertEquals(0, notebookRepoSync.list(0, null).size());
     assertEquals(0, notebookRepoSync.list(1, null).size());
-    
-    Note note = notebookSync.createNote(null);
+
+    AuthenticationInfo anonymous = new AuthenticationInfo("anonymous");
+    Note note = notebookSync.createNote(anonymous);
 
     /* check that created in both storage systems */
     assertEquals(1, notebookRepoSync.list(0, null).size());
@@ -146,7 +148,7 @@ public class NotebookRepoSyncTest implements JobListenerFactory {
     assertEquals(notebookRepoSync.list(0, null).get(0).getId(),notebookRepoSync.list(1, null).get(0).getId());
     
     /* remove Note */
-    notebookSync.removeNote(notebookRepoSync.list(0, null).get(0).getId(), null);
+    notebookSync.removeNote(notebookRepoSync.list(0, null).get(0).getId(), anonymous);
     
     /* check that deleted in both storages */
     assertEquals(0, notebookRepoSync.list(0, null).size());

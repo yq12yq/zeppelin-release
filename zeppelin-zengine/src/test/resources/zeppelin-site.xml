@@ -147,6 +147,11 @@
   <description>Truststore password. Can be obfuscated by the Jetty Password tool. Defaults to the keystore password</description>
 </property>
 -->
+<property>
+  <name>zeppelin.notebook.public</name>
+  <value>true</value>
+  <description>Make notebook public by default when created, private otherwise</description>
+</property>
 
 </configuration>
 
