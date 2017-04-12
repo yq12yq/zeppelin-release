@@ -1,5 +1,7 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+BUG-76858:      Backport ZEPPELIN_IMPERSONATE_CMD from [ZEPPELIN-1320] Run zeppelin interpreter process as web front end user
+BUG-76382:      Backport [ZEPPELIN-1657] Private/public mode for user note creation/import
 ZEPPELIN-1473. It is not necessary to create SQLContext in LivyInterpreter
 ZEPPELIN-1400. Use relative path to the interpreter setting page
 ZEPPELIN-1320: Run zeppelin interpreter process as web front end user
