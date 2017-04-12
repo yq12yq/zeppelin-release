@@ -36,6 +36,7 @@ import org.apache.zeppelin.scheduler.JobListener;
 import org.apache.zeppelin.scheduler.SchedulerFactory;
 import org.apache.zeppelin.search.SearchService;
 import org.apache.zeppelin.search.LuceneSearch;
+import org.apache.zeppelin.user.AuthenticationInfo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +51,7 @@ public class VFSNotebookRepoTest implements JobListenerFactory {
   private NotebookRepo notebookRepo;
   private InterpreterFactory factory;
   private DependencyResolver depResolver;
+  private NotebookAuthorization notebookAuthorization;
 
   private File mainZepDir;
   private File mainNotebookDir;
@@ -80,7 +82,10 @@ public class VFSNotebookRepoTest implements JobListenerFactory {
 
     SearchService search = mock(SearchService.class);
     notebookRepo = new VFSNotebookRepo(conf);
-    notebook = new Notebook(conf, notebookRepo, schedulerFactory, factory, this, search, null, null);
+
+    notebookAuthorization = new NotebookAuthorization(conf);
+    notebook = new Notebook(conf, notebookRepo, schedulerFactory, factory, this, search,
+        notebookAuthorization, null);
   }
 
   @After
@@ -106,7 +111,8 @@ public class VFSNotebookRepoTest implements JobListenerFactory {
 
   @Test
   public void testSaveNotebook() throws IOException, InterruptedException {
-    Note note = notebook.createNote(null);
+    AuthenticationInfo anonymous = new AuthenticationInfo("anonymous");
+    Note note = notebook.createNote(anonymous);
     note.getNoteReplLoader().setInterpreters(factory.getDefaultInterpreterSettingList(), "anonymous");
 
     Paragraph p1 = note.addParagraph();
@@ -114,6 +120,7 @@ public class VFSNotebookRepoTest implements JobListenerFactory {
     config.put("enabled", true);
     p1.setConfig(config);
     p1.setText("%mock1 hello world");
+    p1.setAuthenticationInfo(anonymous);
 
     note.run(p1.getId());
     int timeout = 1;

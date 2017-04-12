@@ -20,6 +20,7 @@ package org.apache.zeppelin.notebook;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
+import org.apache.zeppelin.user.AuthenticationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,6 +101,10 @@ public class NotebookAuthorization {
     } catch (IOException e) {
       LOG.error("Error saving notebook authorization file: " + e.getMessage());
     }
+  }
+
+  public boolean isPublic() {
+    return conf.isNotebokPublic();
   }
 
   private Set<String> validateUser(Set<String> users) {
@@ -225,4 +230,25 @@ public class NotebookAuthorization {
     saveToFile();
   }
 
+  public void setNewNotePermissions(String noteId, AuthenticationInfo subject) {
+    if (!AuthenticationInfo.isAnonymous(subject)) {
+      if (isPublic()) {
+        // add current user to owners - can be public
+        Set<String> owners = getOwners(noteId);
+        owners.add(subject.getUser());
+        setOwners(noteId, owners);
+      } else {
+        // add current user to owners, readers, writers - private note
+        Set<String> entities = getOwners(noteId);
+        entities.add(subject.getUser());
+        setOwners(noteId, entities);
+        entities = getReaders(noteId);
+        entities.add(subject.getUser());
+        setReaders(noteId, entities);
+        entities = getWriters(noteId);
+        entities.add(subject.getUser());
+        setWriters(noteId, entities);
+      }
+    }
+  }
 }
