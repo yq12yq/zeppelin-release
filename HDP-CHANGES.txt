@@ -69,3 +69,6 @@ BUG-91441       ZEPPELIN-3040 Allow to specify portRange for interpreter process
 BUG-91194       Shared Interpreter code should not crash when interpreter.json is missing shared interpreter config
 
     BUG-112093. [ZEPPELIN-3539] Add jceks stored password support for LDAP
+
+    HOTFIX-1886 switching the node location to http, so that it will be cached
+    in our proxies
