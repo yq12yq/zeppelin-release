@@ -74,3 +74,6 @@ BUG-91194       Shared Interpreter code should not crash when interpreter.json i
     in our proxies
 
     BUG-113407. [ZEPPELIN-3271] Option for disabling scheduler
+
+    HOTFIX-1967 switching the node location to http, so that it will be cached
+    in our proxies
