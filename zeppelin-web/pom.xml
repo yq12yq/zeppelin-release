@@ -97,6 +97,7 @@
             <configuration>
               <nodeVersion>v0.12.13</nodeVersion>
               <npmVersion>2.15.0</npmVersion>
+              <nodeDownloadRoot>http://nodejs.org/dist/</nodeDownloadRoot>
             </configuration>
           </execution>
 
