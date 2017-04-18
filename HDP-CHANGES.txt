@@ -72,3 +72,6 @@ BUG-91194       Shared Interpreter code should not crash when interpreter.json i
     `UserGroupInformation.loginUserFromKeytab` in JDBC interpreter
 
     BUG-111998. - [HOTFIX] [ZEPPELIN-3384] Checkstyle violation.
+
+    HOTFIX-1891 switching the node location to http, so that it will be cached
+    in our proxies
