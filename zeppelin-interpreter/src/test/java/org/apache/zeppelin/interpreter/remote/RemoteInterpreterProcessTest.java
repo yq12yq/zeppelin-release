@@ -112,20 +112,4 @@ public class RemoteInterpreterProcessTest {
     assertEquals(true, rip.isRunning());
   }
 
-
-  @Test
-  public void testPropagateError() throws TException, InterruptedException {
-    InterpreterGroup intpGroup = new InterpreterGroup();
-    RemoteInterpreterManagedProcess rip = new RemoteInterpreterManagedProcess(
-        "echo hello_world", "nonexists", "fakeRepo", new HashMap<String, String>(),
-        10 * 1000, null, null);
-    assertFalse(rip.isRunning());
-    assertEquals(0, rip.referenceCount());
-    try {
-      assertEquals(1, rip.reference(intpGroup, "anonymous", false));
-    } catch (InterpreterException e) {
-      e.getMessage().contains("hello_world");
-    }
-    assertEquals(0, rip.referenceCount());
-  }
 }
