@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+BUG-72334:     Hive Jdbc interpreter does not relogin if kerberos ticket expired when hive.server2.transport.mode is http
 ZEPPELIN-1320: Run zeppelin interpreter process as web front end user
 ZEPPELIN-1319: Use absolute path for ssl truststore and keystore when available
 ZEPPELIN-1305: Fix bug of ZEPPELIN-1215
