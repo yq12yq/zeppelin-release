@@ -1,5 +1,12 @@
 Changes only in Hortonworks github and not in zeppelin 0.6.0 Apache Release
 
+BUG-72334:     Hive Jdbc interpreter does not relogin if kerberos ticket expired when hive.server2.transport.mode is http
+BUG-80227:     Improve Session
+BUG-76858:     Backport ZEPPELIN_IMPERSONATE_CMD from [ZEPPELIN-1320] Run zeppelin interpreter process as web front end user
+BUG-76382:     Backport [ZEPPELIN-1657] Private/public mode for user note creation/import
+BUG-73481      User Impersonation fails on setting hive_conf_list in hive interpreter (JDBC)
+BUG-70995.     Use triple quote for sql query
+BUG-70598.     Support Spark2 in livy interpreter
 ZEPPELIN-1473. It is not necessary to create SQLContext in LivyInterpreter
 ZEPPELIN-1400. Use relative path to the interpreter setting page
 ZEPPELIN-1320: Run zeppelin interpreter process as web front end user
