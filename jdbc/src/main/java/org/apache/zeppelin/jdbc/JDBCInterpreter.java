@@ -15,6 +15,7 @@
 package org.apache.zeppelin.jdbc;
 
 import static org.apache.commons.lang.StringUtils.containsIgnoreCase;
+import static org.apache.hadoop.security.UserGroupInformation.AuthenticationMethod.KERBEROS;
 
 import java.io.IOException;
 import java.security.PrivilegedExceptionAction;
@@ -26,8 +27,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+import com.google.common.base.Throwables;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.thrift.transport.TTransportException;
 import org.apache.zeppelin.interpreter.Interpreter;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterException;
@@ -106,6 +109,7 @@ public class JDBCInterpreter extends Interpreter {
 
   private final Map<String, ArrayList<Connection>> propertyKeyUnusedConnectionListMap;
   private final Map<String, Connection> paragraphIdConnectionMap;
+  private final Map<String, Boolean> paragraphIdConnectionSuccesfullMap;
 
   private final Map<String, SqlCompleter> propertyKeySqlCompleterMap;
 
@@ -125,6 +129,7 @@ public class JDBCInterpreter extends Interpreter {
     paragraphIdStatementMap = new HashMap<>();
     paragraphIdConnectionMap = new HashMap<>();
     propertyKeySqlCompleterMap = new HashMap<>();
+    paragraphIdConnectionSuccesfullMap = new HashMap<>();
   }
 
   public HashMap<String, Properties> getPropertiesMap() {
@@ -167,9 +172,6 @@ public class JDBCInterpreter extends Interpreter {
 
     logger.debug("propertiesMap: {}", propertiesMap);
 
-    if (!StringUtils.isAnyEmpty(property.getProperty("zeppelin.jdbc.auth.type"))) {
-      JDBCSecurityImpl.createSecureConfiguration(property);
-    }
     for (String propertyKey : propertiesMap.keySet()) {
       propertyKeySqlCompleterMap.put(propertyKey, createSqlCompleter(null));
     }
@@ -215,6 +217,7 @@ public class JDBCInterpreter extends Interpreter {
       final String url = properties.getProperty(URL_KEY);
 
       UserGroupInformation.AuthenticationMethod authType = JDBCSecurityImpl.getAuthtype(property);
+      JDBCSecurityImpl.createSecureConfiguration(property, authType);
       switch (authType) {
           case KERBEROS:
             if (user == null) {
@@ -277,6 +280,8 @@ public class JDBCInterpreter extends Interpreter {
       connection = paragraphIdConnectionMap.get(paragraphId +
           interpreterContext.getAuthenticationInfo().getUser());
     } else {
+      paragraphIdConnectionSuccesfullMap.put(paragraphId +
+          interpreterContext.getAuthenticationInfo().getUser(), false);
       connection = getConnection(propertyKey, interpreterContext.getAuthenticationInfo().getUser());
     }
 
@@ -325,6 +330,7 @@ public class JDBCInterpreter extends Interpreter {
         connection.close();
       }
       paragraphIdConnectionMap.clear();
+      paragraphIdConnectionSuccesfullMap.clear();
 
     } catch (SQLException e) {
       logger.error("Error while closing...", e);
@@ -359,7 +365,8 @@ public class JDBCInterpreter extends Interpreter {
       try {
 
         boolean isResultSetAvailable = statement.execute(sql);
-
+        paragraphIdConnectionSuccesfullMap.put(paragraphId +
+            interpreterContext.getAuthenticationInfo().getUser(), true);
         if (isResultSetAvailable) {
           resultSet = statement.getResultSet();
 
@@ -412,13 +419,67 @@ public class JDBCInterpreter extends Interpreter {
       return new InterpreterResult(Code.SUCCESS, msg.toString());
 
     } catch (Exception e) {
-      logger.error("Cannot run " + sql, e);
+      if (Throwables.getStackTraceAsString(e).contains("GSS") &&
+          paragraphIdConnectionSuccesfullMap.get(paragraphId +
+              interpreterContext.getAuthenticationInfo().getUser())) {
+        logger.error("I will goto reLoginFromKeytab");
+        logger.error("TTransportException type::" +
+            new Boolean(e.getCause() instanceof TTransportException));
+        return reloginFromKeytab(paragraphId, interpreterContext, sql, propertyKey);
+      } else {
+        logger.error("I didn't goto reLoginFromKeytab in else:::");
+        logger.error("TTransportException type::" +
+            new Boolean(e.getCause() instanceof TTransportException));
+        logger.error("is GSS::" +
+            new Boolean(Throwables.getStackTraceAsString(e).contains("GSS")));
+        logger.error("is user in pool??" +
+            new Boolean(paragraphIdConnectionSuccesfullMap.get(paragraphId +
+                interpreterContext.getAuthenticationInfo().getUser())));
+        logger.error("e.getCause():::", e.getCause());
+        logger.error("Cannot run " + sql, e);
+        return new InterpreterResult(Code.ERROR, Throwables.getStackTraceAsString(e));
+      }
+    }
+  }
+
+  private InterpreterResult reloginFromKeytab(String paragraphId,
+      InterpreterContext interpreterContext, String sql, String propertyKey) {
+    String thisParagraphId = paragraphId +
+        interpreterContext.getAuthenticationInfo().getUser();
+    if (paragraphIdConnectionMap.containsKey(thisParagraphId)) {
+      //close connection
+      try {
+        paragraphIdStatementMap.get(thisParagraphId).close();
+        paragraphIdConnectionMap.get(thisParagraphId).close();
+      } catch (Exception e) {/*ignore this*/}
+    }
+
+    //clear connection map
+    paragraphIdConnectionSuccesfullMap.put(thisParagraphId, false);
+    paragraphIdStatementMap.remove(thisParagraphId);
+    paragraphIdConnectionMap.remove(thisParagraphId);
+
+    //try to re-login
+    try {
+      UserGroupInformation.AuthenticationMethod authType =
+          JDBCSecurityImpl.getAuthtype(property);
+      if (authType.equals(KERBEROS)) {
+        if (UserGroupInformation.isLoginKeytabBased()) {
+          UserGroupInformation.getLoginUser().reloginFromKeytab();
+        } else if (UserGroupInformation.isLoginTicketBased()) {
+          UserGroupInformation.getLoginUser().reloginFromTicketCache();
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Cannot reloginFromKeytab " + sql, e);
       StringBuilder stringBuilder = new StringBuilder();
       stringBuilder.append(e.getMessage()).append("\n");
       stringBuilder.append(e.getClass().toString()).append("\n");
       stringBuilder.append(StringUtils.join(e.getStackTrace(), "\n"));
       return new InterpreterResult(Code.ERROR, stringBuilder.toString());
+
     }
+    return executeSql(propertyKey, sql, interpreterContext);
   }
 
   /**
