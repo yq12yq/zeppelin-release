@@ -213,11 +213,6 @@ You can also find the below community managed interpreter list in `conf/interpre
     <td>Pig interpreter</td>
   </tr>
   <tr>
-    <td>postgresql</td>
-    <td>org.apache.zeppelin:zeppelin-postgresql:0.7.1</td>
-    <td>Postgresql interpreter</td>
-  </tr>
-  <tr>
     <td>python</td>
     <td>org.apache.zeppelin:zeppelin-python:0.7.1</td>
     <td>Python interpreter</td>
