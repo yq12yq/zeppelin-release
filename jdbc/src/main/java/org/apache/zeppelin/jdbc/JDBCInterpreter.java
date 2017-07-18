@@ -186,9 +186,6 @@ public class JDBCInterpreter extends Interpreter {
     }
     logger.debug("JDBC PropretiesMap: {}", basePropretiesMap);
 
-    if (!isEmpty(property.getProperty("zeppelin.jdbc.auth.type"))) {
-      JDBCSecurityImpl.createSecureConfiguration(property);
-    }
     for (String propertyKey : basePropretiesMap.keySet()) {
       propertyKeySqlCompleterMap.put(propertyKey, createSqlCompleter(null));
     }
@@ -372,7 +369,7 @@ public class JDBCInterpreter extends Interpreter {
       connection = getConnectionFromPool(url, user, propertyKey, properties);
     } else {
       UserGroupInformation.AuthenticationMethod authType = JDBCSecurityImpl.getAuthtype(property);
-
+      JDBCSecurityImpl.createSecureConfiguration(property, authType);
       switch (authType) {
           case KERBEROS:
             if (user == null) {
