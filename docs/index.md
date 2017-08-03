@@ -168,24 +168,36 @@ Join to our [Mailing list](https://zeppelin.apache.org/community.html) and repor
   * [Credential API](./rest-api/rest-credential.html)
   * [Helium API](./rest-api/rest-helium.html)
 * Security: available security support in Apache Zeppelin
-  * [Authentication for NGINX](./security/authentication.html)
-  * [Shiro Authentication](./security/shiroauthentication.html)
-  * [Notebook Authorization](./security/notebook_authorization.html)
-  * [Data Source Authorization](./security/datasource_authorization.html)
-  * [Helium Authorization](./security/helium_authorization.html)
-* Advanced
-  * [Apache Zeppelin on Vagrant VM](./install/virtual_machine.html)
-  * [Zeppelin on Spark Cluster Mode (Standalone via Docker)](./install/spark_cluster_mode.html#spark-standalone-mode)
-  * [Zeppelin on Spark Cluster Mode (YARN via Docker)](./install/spark_cluster_mode.html#spark-on-yarn-mode)
-  * [Zeppelin on Spark Cluster Mode (Mesos via Docker)](./install/spark_cluster_mode.html#spark-on-mesos-mode)
-  * [Zeppelin on CDH (via Docker)](./install/cdh.html)
-* Contribute
-  * [Writing Zeppelin Interpreter](./development/writingzeppelininterpreter.html)
-  * [Writing Zeppelin Application (Experimental)](./development/writingzeppelinapplication.html)
-  * [Writing Zeppelin Spell (Experimental)](./development/writingzeppelinspell.html)
-  * [Writing Zeppelin Visualization (Experimental)](./development/writingzeppelinvisualization.html)
-  * [How to contribute (code)](./development/howtocontribute.html)
-  * [How to contribute (documentation website)](./development/howtocontributewebsite.html)
+  * [HTTP Basic Auth using NGINX](./setup/security/authentication_nginx.html)
+  * [Shiro Authentication](./setup/security/shiro_authentication.html)
+  * [Notebook Authorization](./setup/security/notebook_authorization.html)
+  * [Data Source Authorization](./setup/security/datasource_authorization.html)
+  * [HTTP Security Headers](./setup/security/http_security_headers.html)
+* Notebook Storage: a guide about saving notebooks to external storage
+  * [Git Storage](./setup/storage/storage.html#notebook-storage-in-local-git-repository)
+  * [S3 Storage](./setup/storage/storage.html#notebook-storage-in-s3)
+  * [Azure Storage](./setup/storage/storage.html#notebook-storage-in-azure)
+  * [ZeppelinHub Storage](./setup/storage/storage.html#notebook-storage-in-zeppelinhub)
+  * [MongoDB Storage](./setup/storage/storage.html#notebook-storage-in-mongodb)
+* Operation 
+  * [Configuration](./setup/operation/configuration.html): lists for Apache Zeppelin
+  * [Proxy Setting](./setup/operation/proxy_setting.html)
+  * [Upgrading](./setup/operation/upgrading.html): a manual procedure of upgrading Apache Zeppelin version
+  * [Trouble Shooting](./setup/operation/trouble_shooting.html)
+  
+#### Developer Guide
+* Extending Zeppelin
+  * [Writing Zeppelin Interpreter](./development/writing_zeppelin_interpreter.html)
+  * [Helium: Overview](./development/helium/overview.html)
+  * [Helium: Writing Application](./development/helium/writing_application.html)
+  * [Helium: Writing Spell](./development/helium/writing_spell.html)
+  * [Helium: Writing Visualization: Basic](./development/helium/writing_visualization_basic.html)
+  * [Helium: Writing Visualization: Transformation](./development/helium/writing_visualization_transformation.html)
+* Contributing to Zeppelin
+  * [How to Build Zeppelin](./setup/basics/how_to_build.html)
+  * [Useful Developer Tools](./development/contribution/useful_developer_tools.html)
+  * [How to Contribute (code)](./development/contribution/how_to_contribute_code.html)
+  * [How to Contribute (website)](./development/contribution/how_to_contribute_website.html)
 
 #### External Resources
   * [Mailing List](https://zeppelin.apache.org/community.html)
