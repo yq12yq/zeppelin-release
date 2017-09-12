@@ -39,4 +39,5 @@ ZEPPELIN-2068   Change interpreter.json & credentials.json permission to 600.
 ZEPPELIN-2083   default interpreter list should honour order of zeppelin.interpreters property in
 BUG-73712       Ship only approved notebooks with Zeppelin OOB.
 BUG-67291       Zeppelin build failure
- 
+BUG-87800       URI Data scheme -> Blob creation
+
