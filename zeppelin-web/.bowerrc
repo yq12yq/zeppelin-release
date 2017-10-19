@@ -1,5 +1,4 @@
 {
   "directory": "bower_components",
-  "json": "bower.json",
-  "registry": "https://registry.bower.io"
+  "json": "bower.json"
 }
