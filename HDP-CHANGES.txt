@@ -42,3 +42,5 @@ BUG-67291       Zeppelin build failure
  
     BUG-90847. [ZEPPELIN-2234][BUG] Can't display the same chart again
     (branch-0.7)
+
+    BUG-90847. [ZEPPELIN-2348] Line chart setting is not rendered (branch-0.7)
