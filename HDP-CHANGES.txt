@@ -40,3 +40,5 @@ ZEPPELIN-2083   default interpreter list should honour order of zeppelin.interpr
 BUG-73712       Ship only approved notebooks with Zeppelin OOB.
 BUG-67291       Zeppelin build failure
  
+    BUG-90847. [ZEPPELIN-2234][BUG] Can't display the same chart again
+    (branch-0.7)
