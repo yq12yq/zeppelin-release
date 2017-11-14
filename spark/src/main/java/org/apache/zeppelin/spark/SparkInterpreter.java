@@ -33,6 +33,7 @@ import com.google.common.base.Joiner;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.spark.JobProgressUtil;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.SparkEnv;
@@ -40,12 +41,9 @@ import org.apache.spark.SparkEnv;
 import org.apache.spark.SecurityManager;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.repl.SparkILoop;
-import org.apache.spark.scheduler.ActiveJob;
-import org.apache.spark.scheduler.DAGScheduler;
 import org.apache.spark.scheduler.Pool;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.ui.SparkUI;
-import org.apache.spark.ui.jobs.JobProgressListener;
 import org.apache.zeppelin.interpreter.Interpreter;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterException;
@@ -106,7 +104,6 @@ public class SparkInterpreter extends Interpreter {
   private static InterpreterHookRegistry hooks;
   private static SparkEnv env;
   private static Object sparkSession;    // spark 2.x
-  private static JobProgressListener sparkListener;
   private static AbstractFile classOutputDir;
   private static Integer sharedInterpreterLock = new Integer(0);
   private static AtomicInteger numReferenceOfSparkContext = new AtomicInteger(0);
@@ -137,7 +134,6 @@ public class SparkInterpreter extends Interpreter {
 
     this.sc = sc;
     env = SparkEnv.get();
-    sparkListener = setupListeners(this.sc);
   }
 
   public SparkContext getSparkContext() {
@@ -145,7 +141,6 @@ public class SparkInterpreter extends Interpreter {
       if (sc == null) {
         sc = createSparkContext();
         env = SparkEnv.get();
-        sparkListener = setupListeners(sc);
       }
       return sc;
     }
@@ -164,45 +159,6 @@ public class SparkInterpreter extends Interpreter {
     synchronized (sharedInterpreterLock) {
       return sc != null;
     }
-  }
-
-  static JobProgressListener setupListeners(SparkContext context) {
-    JobProgressListener pl = new JobProgressListener(context.getConf());
-    try {
-      Object listenerBus = context.getClass().getMethod("listenerBus").invoke(context);
-
-      Method[] methods = listenerBus.getClass().getMethods();
-      Method addListenerMethod = null;
-      for (Method m : methods) {
-        if (!m.getName().equals("addListener")) {
-          continue;
-        }
-
-        Class<?>[] parameterTypes = m.getParameterTypes();
-
-        if (parameterTypes.length != 1) {
-          continue;
-        }
-
-        if (!parameterTypes[0].isAssignableFrom(JobProgressListener.class)) {
-          continue;
-        }
-
-        addListenerMethod = m;
-        break;
-      }
-
-      if (addListenerMethod != null) {
-        addListenerMethod.invoke(listenerBus, pl);
-      } else {
-        return null;
-      }
-    } catch (NoSuchMethodException | SecurityException | IllegalAccessException
-        | IllegalArgumentException | InvocationTargetException e) {
-      logger.error(e.toString(), e);
-      return null;
-    }
-    return pl;
   }
 
   private boolean useHiveContext() {
@@ -1267,114 +1223,7 @@ public class SparkInterpreter extends Interpreter {
   @Override
   public int getProgress(InterpreterContext context) {
     String jobGroup = getJobGroup(context);
-    int completedTasks = 0;
-    int totalTasks = 0;
-
-    DAGScheduler scheduler = sc.dagScheduler();
-    if (scheduler == null) {
-      return 0;
-    }
-    HashSet<ActiveJob> jobs = scheduler.activeJobs();
-    if (jobs == null || jobs.size() == 0) {
-      return 0;
-    }
-    Iterator<ActiveJob> it = jobs.iterator();
-    while (it.hasNext()) {
-      ActiveJob job = it.next();
-      String g = (String) job.properties().get("spark.jobGroup.id");
-      if (jobGroup.equals(g)) {
-        int[] progressInfo = null;
-        try {
-          Object finalStage = job.getClass().getMethod("finalStage").invoke(job);
-          if (sparkVersion.getProgress1_0()) {
-            progressInfo = getProgressFromStage_1_0x(sparkListener, finalStage);
-          } else {
-            progressInfo = getProgressFromStage_1_1x(sparkListener, finalStage);
-          }
-        } catch (IllegalAccessException | IllegalArgumentException
-            | InvocationTargetException | NoSuchMethodException
-            | SecurityException e) {
-          logger.error("Can't get progress info", e);
-          return 0;
-        }
-        totalTasks += progressInfo[0];
-        completedTasks += progressInfo[1];
-      }
-    }
-
-    if (totalTasks == 0) {
-      return 0;
-    }
-    return completedTasks * 100 / totalTasks;
-  }
-
-  private int[] getProgressFromStage_1_0x(JobProgressListener sparkListener, Object stage)
-      throws IllegalAccessException, IllegalArgumentException,
-      InvocationTargetException, NoSuchMethodException, SecurityException {
-    int numTasks = (int) stage.getClass().getMethod("numTasks").invoke(stage);
-    int completedTasks = 0;
-
-    int id = (int) stage.getClass().getMethod("id").invoke(stage);
-
-    Object completedTaskInfo = null;
-
-    completedTaskInfo = JavaConversions.mapAsJavaMap(
-        (HashMap<Object, Object>) sparkListener.getClass()
-            .getMethod("stageIdToTasksComplete").invoke(sparkListener)).get(id);
-
-    if (completedTaskInfo != null) {
-      completedTasks += (int) completedTaskInfo;
-    }
-    List<Object> parents = JavaConversions.seqAsJavaList((Seq<Object>) stage.getClass()
-        .getMethod("parents").invoke(stage));
-    if (parents != null) {
-      for (Object s : parents) {
-        int[] p = getProgressFromStage_1_0x(sparkListener, s);
-        numTasks += p[0];
-        completedTasks += p[1];
-      }
-    }
-
-    return new int[] {numTasks, completedTasks};
-  }
-
-  private int[] getProgressFromStage_1_1x(JobProgressListener sparkListener, Object stage)
-      throws IllegalAccessException, IllegalArgumentException,
-      InvocationTargetException, NoSuchMethodException, SecurityException {
-    int numTasks = (int) stage.getClass().getMethod("numTasks").invoke(stage);
-    int completedTasks = 0;
-    int id = (int) stage.getClass().getMethod("id").invoke(stage);
-
-    try {
-      Method stageIdToData = sparkListener.getClass().getMethod("stageIdToData");
-      HashMap<Tuple2<Object, Object>, Object> stageIdData =
-          (HashMap<Tuple2<Object, Object>, Object>) stageIdToData.invoke(sparkListener);
-      Class<?> stageUIDataClass =
-          this.getClass().forName("org.apache.spark.ui.jobs.UIData$StageUIData");
-
-      Method numCompletedTasks = stageUIDataClass.getMethod("numCompleteTasks");
-      Set<Tuple2<Object, Object>> keys =
-          JavaConverters.setAsJavaSetConverter(stageIdData.keySet()).asJava();
-      for (Tuple2<Object, Object> k : keys) {
-        if (id == (int) k._1()) {
-          Object uiData = stageIdData.get(k).get();
-          completedTasks += (int) numCompletedTasks.invoke(uiData);
-        }
-      }
-    } catch (Exception e) {
-      logger.error("Error on getting progress information", e);
-    }
-
-    List<Object> parents = JavaConversions.seqAsJavaList((Seq<Object>) stage.getClass()
-        .getMethod("parents").invoke(stage));
-    if (parents != null) {
-      for (Object s : parents) {
-        int[] p = getProgressFromStage_1_1x(sparkListener, s);
-        numTasks += p[0];
-        completedTasks += p[1];
-      }
-    }
-    return new int[] {numTasks, completedTasks};
+    return JobProgressUtil.progress(sc, jobGroup);
   }
 
   private Code getResultCode(scala.tools.nsc.interpreter.Results.Result r) {
@@ -1412,10 +1261,6 @@ public class SparkInterpreter extends Interpreter {
   @Override
   public FormType getFormType() {
     return FormType.NATIVE;
-  }
-
-  public JobProgressListener getJobProgressListener() {
-    return sparkListener;
   }
 
   @Override

@@ -139,12 +139,6 @@ public class SparkInterpreterTest {
   }
 
   @Test
-  public void testListener() {
-    SparkContext sc = repl.getSparkContext();
-    assertNotNull(SparkInterpreter.setupListeners(sc));
-  }
-
-  @Test
   public void testCreateDataFrame() {
     if (getSparkVersionNumber(repl) >= 13) {
       repl.interpret("case class Person(name:String, age:Int)\n", context);
