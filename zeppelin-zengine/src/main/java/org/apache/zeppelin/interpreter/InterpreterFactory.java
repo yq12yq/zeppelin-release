@@ -317,7 +317,9 @@ public class InterpreterFactory implements InterpreterGroupFactory {
         new RemoteInterpreter(property, interpreterSessionKey, className,
             interpreterRunnerPath, interpreterPath, localRepoPath, connectTimeout, maxPoolSize,
             remoteInterpreterProcessListener, appEventListener, userName, isUserImpersonate,
-            interpreterGroupName);
+            interpreterGroupName,
+            conf.getInterpreterPortRange());
+
     remoteInterpreter.addEnv(env);
 
     return new LazyOpenInterpreter(remoteInterpreter);
