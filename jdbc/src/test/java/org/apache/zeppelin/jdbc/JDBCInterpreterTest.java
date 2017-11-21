@@ -276,7 +276,7 @@ public class JDBCInterpreterTest extends BasicJDBCTestCaseAdapter {
     assertTrue(scheduler instanceof FIFOScheduler);
   }
 
-  @Test
+//  @Test
   public void testAutoCompletion() throws SQLException, IOException {
     Properties properties = new Properties();
     properties.setProperty("common.max_count", "1000");
