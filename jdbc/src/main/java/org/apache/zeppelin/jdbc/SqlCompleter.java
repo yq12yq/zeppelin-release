@@ -118,70 +118,70 @@ public class SqlCompleter extends StringsCompleter {
 
     Set<String> completions = new TreeSet<>();
 
-    if (null != connection) {
-      DatabaseMetaData metaData = connection.getMetaData();
-
-      // Add the driver specific SQL completions
-      String driverSpecificKeywords =
-          "/" + metaData.getDriverName().replace(" ", "-").toLowerCase() + "-sql.keywords";
-
-      logger.info("JDBC DriverName:" + driverSpecificKeywords);
-
-      if (SqlCompleter.class.getResource(driverSpecificKeywords) != null) {
-        String driverKeywords =
-            new BufferedReader(new InputStreamReader(
-                SqlCompleter.class.getResourceAsStream(driverSpecificKeywords))).readLine();
-        keywords += "," + driverKeywords.toUpperCase();
-      }
-
-
-      // Add the keywords from the current JDBC connection
-      try {
-        keywords += "," + metaData.getSQLKeywords();
-      } catch (Exception e) {
-        logger.debug("fail to get SQL key words from database metadata: " + e, e);
-      }
-      try {
-        keywords += "," + metaData.getStringFunctions();
-      } catch (Exception e) {
-        logger.debug("fail to get string function names from database metadata: " + e, e);
-      }
-      try {
-        keywords += "," + metaData.getNumericFunctions();
-      } catch (Exception e) {
-        logger.debug("fail to get numeric function names from database metadata: " + e, e);
-      }
-      try {
-        keywords += "," + metaData.getSystemFunctions();
-      } catch (Exception e) {
-        logger.debug("fail to get system function names from database metadata: " + e, e);
-      }
-      try {
-        keywords += "," + metaData.getTimeDateFunctions();
-      } catch (Exception e) {
-        logger.debug("fail to get time date function names from database metadata: " + e, e);
-      }
-
-      // Also allow lower-case versions of all the keywords
-      keywords += "," + keywords.toLowerCase();
-
-    }
-
-    StringTokenizer tok = new StringTokenizer(keywords, ", ");
-    while (tok.hasMoreTokens()) {
-      completions.add(tok.nextToken());
-    }
-
+//     if (null != connection) {
+//       DatabaseMetaData metaData = connection.getMetaData();
+// 
+//       // Add the driver specific SQL completions
+//       String driverSpecificKeywords =
+//           "/" + metaData.getDriverName().replace(" ", "-").toLowerCase() + "-sql.keywords";
+// 
+//       logger.info("JDBC DriverName:" + driverSpecificKeywords);
+// 
+//       if (SqlCompleter.class.getResource(driverSpecificKeywords) != null) {
+//         String driverKeywords =
+//             new BufferedReader(new InputStreamReader(
+//                 SqlCompleter.class.getResourceAsStream(driverSpecificKeywords))).readLine();
+//         keywords += "," + driverKeywords.toUpperCase();
+//       }
+// 
+// 
+//       // Add the keywords from the current JDBC connection
+//       try {
+//         keywords += "," + metaData.getSQLKeywords();
+//       } catch (Exception e) {
+//         logger.debug("fail to get SQL key words from database metadata: " + e, e);
+//       }
+//       try {
+//         keywords += "," + metaData.getStringFunctions();
+//       } catch (Exception e) {
+//         logger.debug("fail to get string function names from database metadata: " + e, e);
+//       }
+//       try {
+//         keywords += "," + metaData.getNumericFunctions();
+//       } catch (Exception e) {
+//         logger.debug("fail to get numeric function names from database metadata: " + e, e);
+//       }
+//       try {
+//         keywords += "," + metaData.getSystemFunctions();
+//       } catch (Exception e) {
+//         logger.debug("fail to get system function names from database metadata: " + e, e);
+//       }
+//       try {
+//         keywords += "," + metaData.getTimeDateFunctions();
+//       } catch (Exception e) {
+//         logger.debug("fail to get time date function names from database metadata: " + e, e);
+//       }
+// 
+//       // Also allow lower-case versions of all the keywords
+//       keywords += "," + keywords.toLowerCase();
+// 
+//     }
+// 
+//     StringTokenizer tok = new StringTokenizer(keywords, ", ");
+//     while (tok.hasMoreTokens()) {
+//       completions.add(tok.nextToken());
+//     }
+ 
     return completions;
   }
 
   public static Set<String> getDataModelMetadataCompletions(Connection connection)
       throws SQLException {
     Set<String> completions = new TreeSet<>();
-    if (null != connection) {
-      getColumnNames(connection.getMetaData(), completions);
-      getSchemaNames(connection.getMetaData(), completions);
-    }
+//    if (null != connection) {
+//      getColumnNames(connection.getMetaData(), completions);
+//      getSchemaNames(connection.getMetaData(), completions);
+//    }
     return completions;
   }
 
