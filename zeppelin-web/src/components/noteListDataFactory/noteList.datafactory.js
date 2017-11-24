@@ -14,9 +14,9 @@
 
 angular.module('zeppelinWebApp').factory('noteListDataFactory', noteListDataFactory);
 
-noteListDataFactory.$inject = ['TRASH_FOLDER_ID'];
+noteListDataFactory.$inject = ['arrayOrderingSrv', 'TRASH_FOLDER_ID'];
 
-function noteListDataFactory(TRASH_FOLDER_ID) {
+function noteListDataFactory(arrayOrderingSrv, TRASH_FOLDER_ID) {
   var notes = {
     root: {children: []},
     flatList: [],
@@ -39,9 +39,9 @@ function noteListDataFactory(TRASH_FOLDER_ID) {
 
         // recursively add nodes
         addNode(root, nodes, note.id);
-
         return root;
       }, notes.root);
+      notes.root.children.sort(arrayOrderingSrv.noteComparator);
     }
   };
 

@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "grunt-angular-templates": "^0.5.7",
-    "grunt-dom-munger": "^3.4.0"
+    "grunt-dom-munger": "^3.4.0",
+    "karma-phantomjs-launcher": "^1.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.4",

@@ -32,6 +32,7 @@ function HomeCtrl($scope, noteListDataFactory, websocketMsgSrv, $rootScope, arra
   vm.notes = noteListDataFactory;
   vm.websocketMsgSrv = websocketMsgSrv;
   vm.arrayOrderingSrv = arrayOrderingSrv;
+  vm.numberOfNotesDisplayed = window.innerHeight / 20;
 
   vm.notebookHome = false;
   vm.noteCustomHome = true;
@@ -92,6 +93,10 @@ function HomeCtrl($scope, noteListDataFactory, websocketMsgSrv, $rootScope, arra
       vm.notebookHome = false;
     }
   });
+
+  $scope.loadMoreNotes = function () {
+    vm.numberOfNotesDisplayed += 10;
+  }
 
   $scope.renameNote = function(nodeId, nodePath) {
     noteActionSrv.renameNote(nodeId, nodePath);

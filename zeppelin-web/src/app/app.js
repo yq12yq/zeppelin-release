@@ -33,6 +33,7 @@ var zeppelinWebApp = angular.module('zeppelinWebApp', [
   'ngToast',
   'focus-if',
   'ngResource',
+  'infinite-scroll',
   'ngclipboard'
 ])
   .filter('breakFilter', function() {
