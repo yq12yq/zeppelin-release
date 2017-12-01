@@ -20,3 +20,6 @@ BUG-67291       Zeppelin build failure
  
     BUG-91914. ZEPPELIN-3040. Allow to specify portRange for interpreter process
     thrift service
+
+    BUG-92565. [ZEPPELIN-3063] Notebook loses formatting when importing from
+    0.6.x
