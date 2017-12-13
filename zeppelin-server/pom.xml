@@ -34,7 +34,6 @@
   <properties>
     <!--library versions-->
     <cxf.version>2.7.8</cxf.version>
-    <hadoop-common.version>2.7.3.2.6.3.0-SNAPSHOT</hadoop-common.version>
     <commons.httpclient.version>4.3.6</commons.httpclient.version>
     <jersey.version>2.22.2</jersey.version>
     <quartz.scheduler.version>2.2.1</quartz.scheduler.version>
@@ -256,6 +255,12 @@
       <artifactId>scalatest_${scala.binary.version}</artifactId>
       <version>${scalatest.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang.modules</groupId>
+          <artifactId>scala-xml_${scala.binary.version}</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -442,6 +447,21 @@
         </zeppelin.daemon.package.base>
       </properties>
     </profile>
+
+    <profile>
+      <id>hadoop2</id>
+      <properties>
+        <hadoop.version>2.7.3.2.6.3.0-SNAPSHOT</hadoop.version>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>hadoop3</id>
+      <properties>
+        <hadoop.version>3.0.0.3.0.0.0-593</hadoop.version>
+      </properties>
+    </profile>
   </profiles>
+
 
 </project>
