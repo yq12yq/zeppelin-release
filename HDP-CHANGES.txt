@@ -61,3 +61,5 @@ BUG-73354       Zeppelin ui was unreachable till 2 minutes after it was restarte
 BUG-73712       Ship only approved notebooks with Zeppelin OOB.
 BUG-67291       Zeppelin build failure
 BUG-87874       ZEPPELIN-2850. URI Data scheme -> Blob creation
+
+    BUG-100971. [ZEPPELIN-3129] Zepplin UI Doesnt logs out in IE
