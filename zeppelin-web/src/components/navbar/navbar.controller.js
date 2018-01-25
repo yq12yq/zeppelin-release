@@ -82,7 +82,7 @@ angular.module('zeppelinWebApp')
               return
             }
           })(window.XMLHttpRequest ? new window.XMLHttpRequest()
-            // eslint-disable-next-line no-undef
+             /* globals u, ActiveXObject */
             : (window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : u))
         }
         if (!outcome) {

@@ -21,6 +21,7 @@
   "smarttabs": true,
   "jasmine": true,
   "predef": [ "inject" ],
+  "asi": true,
   "globals": {
     "angular": false,
     "_": false,
