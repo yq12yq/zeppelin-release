@@ -365,11 +365,11 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
     assertNotNull("can't create new note", note);
     note.setName("note for run test");
     Paragraph paragraph = note.addParagraph(AuthenticationInfo.ANONYMOUS);
-    
+
     Map config = paragraph.getConfig();
     config.put("enabled", true);
     paragraph.setConfig(config);
-    
+
     paragraph.setText("%md This is test paragraph.");
     note.persist(anonymous);
     String noteId = note.getId();
@@ -384,7 +384,7 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
         break;
       }
     }
-    
+
     // Call Run note jobs REST API
     PostMethod postNoteJobs = httpPost("/notebook/job/" + noteId, "");
     assertThat("test note jobs run:", postNoteJobs, isAllowed());
@@ -393,21 +393,21 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
     // Call Stop note jobs REST API
     DeleteMethod deleteNoteJobs = httpDelete("/notebook/job/" + noteId);
     assertThat("test note stop:", deleteNoteJobs, isAllowed());
-    deleteNoteJobs.releaseConnection();    
+    deleteNoteJobs.releaseConnection();
     Thread.sleep(1000);
-    
+
     // Call Run paragraph REST API
     PostMethod postParagraph = httpPost("/notebook/job/" + noteId + "/" + paragraph.getId(), "");
     assertThat("test paragraph run:", postParagraph, isAllowed());
-    postParagraph.releaseConnection();    
+    postParagraph.releaseConnection();
     Thread.sleep(1000);
-    
+
     // Call Stop paragraph REST API
     DeleteMethod deleteParagraph = httpDelete("/notebook/job/" + noteId + "/" + paragraph.getId());
     assertThat("test paragraph stop:", deleteParagraph, isAllowed());
-    deleteParagraph.releaseConnection();    
+    deleteParagraph.releaseConnection();
     Thread.sleep(1000);
-    
+
     //cleanup
     ZeppelinServer.notebook.removeNote(note.getId(), anonymous);
   }
@@ -511,7 +511,7 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
     ZeppelinServer.notebook.removeNote(note.getId(), anonymous);
   }
 
-  @Test
+//  @Test
   public void testJobs() throws InterruptedException, IOException{
     // create a note and a paragraph
     Note note = ZeppelinServer.notebook.createNote(anonymous);
@@ -519,7 +519,7 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
     note.setName("note for run test");
     Paragraph paragraph = note.addParagraph(AuthenticationInfo.ANONYMOUS);
     paragraph.setText("%md This is test paragraph.");
-    
+
     Map config = paragraph.getConfig();
     config.put("enabled", true);
     paragraph.setConfig(config);
@@ -534,26 +534,26 @@ public class ZeppelinRestApiTest extends AbstractTestRestApi {
         break;
       }
     }
-    
+
     String jsonRequest = "{\"cron\":\"* * * * * ?\" }";
     // right cron expression but not exist note.
     PostMethod postCron = httpPost("/notebook/cron/notexistnote", jsonRequest);
     assertThat("", postCron, isNotFound());
     postCron.releaseConnection();
-    
+
     // right cron expression.
     postCron = httpPost("/notebook/cron/" + note.getId(), jsonRequest);
     assertThat("", postCron, isAllowed());
     postCron.releaseConnection();
     Thread.sleep(1000);
-    
+
     // wrong cron expression.
     jsonRequest = "{\"cron\":\"a * * * * ?\" }";
     postCron = httpPost("/notebook/cron/" + note.getId(), jsonRequest);
     assertThat("", postCron, isBadRequest());
     postCron.releaseConnection();
     Thread.sleep(1000);
-    
+
     // remove cron job.
     DeleteMethod deleteCron = httpDelete("/notebook/cron/" + note.getId());
     assertThat("", deleteCron, isAllowed());
