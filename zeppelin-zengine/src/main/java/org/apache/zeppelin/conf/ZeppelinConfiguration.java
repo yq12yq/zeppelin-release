@@ -511,6 +511,16 @@ public class ZeppelinConfiguration extends XMLConfiguration {
     return getString(ConfVars.ZEPPELIN_INTERPRETER_PORTRANGE);
   }
 
+  public Boolean isZeppelinNotebookCronEnable() {
+    // return getBoolean(ConfVars.ZEPPELIN_NOTEBOOK_CRON_ENABLE);
+    // BUG-97459: Option for disabling scheduler (always return false)
+    return false;
+  }
+
+  public String getZeppelinNotebookCronFolders() {
+    return getString(ConfVars.ZEPPELIN_NOTEBOOK_CRON_FOLDERS);
+  }
+
   public Map<String, String> dumpConfigurations(ZeppelinConfiguration conf,
                                                 ConfigurationKeyPredicate predicate) {
     Map<String, String> configurations = new HashMap<>();
@@ -663,8 +673,11 @@ public class ZeppelinConfiguration extends XMLConfiguration {
     ZEPPELIN_SERVER_X_XSS_PROTECTION("zeppelin.server.xxss.protection", "1"),
     ZEPPELIN_SERVER_KERBEROS_KEYTAB("zeppelin.server.kerberos.keytab", ""),
     ZEPPELIN_SERVER_KERBEROS_PRINCIPAL("zeppelin.server.kerberos.principal", ""),
-    
-    ZEPPELIN_INTERPRETER_PORTRANGE("zeppelin.interpreter.portRange", ":");
+
+    ZEPPELIN_INTERPRETER_PORTRANGE("zeppelin.interpreter.portRange", ":"),
+
+    ZEPPELIN_NOTEBOOK_CRON_ENABLE("zeppelin.notebook.cron.enable", false),
+    ZEPPELIN_NOTEBOOK_CRON_FOLDERS("zeppelin.notebook.cron.folders", null);
 
 
     private String varName;
