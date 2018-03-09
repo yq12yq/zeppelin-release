@@ -70,3 +70,10 @@ BUG-91117       Disable SQL completer in JDBC interpreter
 BUG-91917       ZEPPELIN-3063 Notebook loses formatting when importing from 0.6.x
 BUG-91441       ZEPPELIN-3040 Allow to specify portRange for interpreter process thrift service
 BUG-91194       Shared Interpreter code should not crash when interpreter.json is missing shared interpreter config
+BUG-97459       ZEPPELIN-3271 Option for disabling scheduler
+ZEP-68          replace com.microsoft.azure:azure-storage with org.apache.hadoop:hadoop-azure (addendum: update adl.sdk.version to 2.2.5)
+ZEPPELIN-903    Replace CXF with Jersey2
+ZEPPELIN-3072   Zeppelin UI becomes slow/unresponsive if there are too many notebooks
+ZEPPELIN-3129   Zepplin UI Doesnt logs out in IE
+BUG-93529       Issues with Remote Storage and Kerberos
+
