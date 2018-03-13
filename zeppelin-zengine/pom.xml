@@ -369,12 +369,6 @@
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-azure-datalake</artifactId>
       <version>${hadoop.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.microsoft.azure</groupId>
-          <artifactId>azure-data-lake-store-sdk</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
