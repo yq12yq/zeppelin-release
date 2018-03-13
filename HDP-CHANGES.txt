@@ -67,3 +67,5 @@ BUG-91117       Disable SQL completer in JDBC interpreter
 BUG-91917       ZEPPELIN-3063 Notebook loses formatting when importing from 0.6.x
 BUG-91441       ZEPPELIN-3040 Allow to specify portRange for interpreter process thrift service
 BUG-91194       Shared Interpreter code should not crash when interpreter.json is missing shared interpreter config
+
+    BUG-114612. [ZEPPELIN-3271] Option for disabling scheduler

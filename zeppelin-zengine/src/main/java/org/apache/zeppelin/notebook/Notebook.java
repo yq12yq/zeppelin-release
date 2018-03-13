@@ -214,10 +214,12 @@ public class Notebook implements NoteEventListener {
       Note oldNote = Note.GSON.fromJson(reader, Note.class);
       convertFromSingleResultToMultipleResultsFormat(oldNote);
       newNote = createNote(subject);
-      if (noteName != null)
+      if (noteName != null) {
         newNote.setName(noteName);
-      else
+      } else {
         newNote.setName(oldNote.getName());
+      }
+      newNote.setCronSupported(getConf());
       List<Paragraph> paragraphs = oldNote.getParagraphs();
       for (Paragraph p : paragraphs) {
         newNote.addCloneParagraph(p);
@@ -254,6 +256,7 @@ public class Notebook implements NoteEventListener {
     } else {
       newNote.setName("Note " + newNote.getId());
     }
+    newNote.setCronSupported(getConf());
     // Copy the interpreter bindings
     List<String> boundInterpreterSettingsIds = getBindedInterpreterSettingsIds(sourceNote.getId());
     bindInterpretersToNote(subject.getUser(), newNote.getId(), boundInterpreterSettingsIds);
@@ -508,6 +511,7 @@ public class Notebook implements NoteEventListener {
 
     note.setJobListenerFactory(jobListenerFactory);
     note.setNotebookRepo(notebookRepo);
+    note.setCronSupported(getConf());
 
     Map<String, SnapshotAngularObject> angularObjectSnapshot = new HashMap<>();
 
@@ -901,6 +905,11 @@ public class Notebook implements NoteEventListener {
 
       String noteId = context.getJobDetail().getJobDataMap().getString("noteId");
       Note note = notebook.getNote(noteId);
+      if (!note.isCronSupported(notebook.getConf())) {
+        logger.warn("execution of the cron job is skipped cron is not enabled from "
+            + "Zeppelin server");
+        return;
+      }
       note.runAll();
 
       while (!note.isTerminated()) {
@@ -939,6 +948,11 @@ public class Notebook implements NoteEventListener {
       }
       Map<String, Object> config = note.getConfig();
       if (config == null) {
+        return;
+      }
+      if (!note.isCronSupported(getConf())) {
+        logger.warn("execution of the cron job is skipped cron is not enabled from "
+            + "Zeppelin server");
         return;
       }
 
