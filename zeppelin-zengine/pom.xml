@@ -831,6 +831,10 @@
           <version>${hadoop.version}</version>
           <exclusions>
             <exclusion>
+              <groupId>org.apache.hadoop</groupId>
+              <artifactId>hadoop-common</artifactId>
+            </exclusion>
+            <exclusion>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-core</artifactId>
             </exclusion>
@@ -901,6 +905,10 @@
           <artifactId>hadoop-azure-datalake</artifactId>
           <version>${hadoop.version}</version>
           <exclusions>
+            <exclusion>
+              <groupId>org.apache.hadoop</groupId>
+              <artifactId>hadoop-common</artifactId>
+            </exclusion>
             <exclusion>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-core</artifactId>
