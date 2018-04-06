@@ -235,6 +235,8 @@
     <hadoop.common.version>2.7.2</hadoop.common.version>
     <h2.version>1.4.190</h2.version>
     <commons.dbcp2.version>2.0.1</commons.dbcp2.version>
+    <spark-hive.version>1.2.1</spark-hive.version>
+    <spark.hive.jdbc.driver.classifier>standalone</spark.hive.jdbc.driver.classifier>
 
     <!--test library versions-->
     <mockrunner.jdbc.version>1.0.8</mockrunner.jdbc.version>
@@ -348,6 +350,13 @@
           <artifactId>jsch</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.spark-project.hive</groupId>
+      <artifactId>hive-jdbc</artifactId>
+      <version>${spark-hive.version}</version>
+      <classifier>${spark.hive.jdbc.driver.classifier}</classifier>
     </dependency>
   </dependencies>
 
