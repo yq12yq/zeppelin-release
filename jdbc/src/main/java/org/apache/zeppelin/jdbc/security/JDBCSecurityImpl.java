@@ -33,7 +33,7 @@ import static org.apache.hadoop.security.UserGroupInformation.AuthenticationMeth
  */
 public class JDBCSecurityImpl {
 
-  private static Logger LOGGER = LoggerFactory.getLogger(JDBCSecurityImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(JDBCSecurityImpl.class);
 
   /***
    * @param properties
