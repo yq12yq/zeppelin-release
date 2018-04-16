@@ -3,7 +3,7 @@
     {
       "text": "%md\n## Welcome to Zeppelin.\n##### This is a live tutorial, you can run the code yourself. (Shift-Enter to Run)",
       "user": "anonymous",
-      "dateUpdated": "Dec 17, 2016 3:32:15 PM",
+      "dateUpdated": "2018-04-16 17:24:00.969",
       "config": {
         "colWidth": 12.0,
         "editorHide": true,
@@ -26,7 +26,8 @@
           "editOnDblClick": true
         },
         "editorMode": "ace/mode/markdown",
-        "tableHide": false
+        "tableHide": false,
+        "fontSize": 9.0
       },
       "settings": {
         "params": {},
@@ -44,17 +45,17 @@
       "apps": [],
       "jobName": "paragraph_1423836981412_-1007008116",
       "id": "20150213-231621_168813393",
-      "dateCreated": "Feb 13, 2015 11:16:21 PM",
-      "dateStarted": "Dec 17, 2016 3:32:15 PM",
-      "dateFinished": "Dec 17, 2016 3:32:18 PM",
+      "dateCreated": "2015-02-13 23:16:21.000",
+      "dateStarted": "2018-04-16 17:24:00.979",
+      "dateFinished": "2018-04-16 17:24:00.985",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Load data into table",
-      "text": "%spark.spark\nimport org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\n\n// Zeppelin creates and injects sc (SparkContext) and sqlContext (HiveContext or SqlContext)\n// So you don\u0027t need create them manually\n\n// load bank data\nval bankText \u003d sc.parallelize(\n    IOUtils.toString(\n        new URL(\"https://s3.amazonaws.com/apache-zeppelin/tutorial/bank/bank.csv\"),\n        Charset.forName(\"utf8\")).split(\"\\n\"))\n\ncase class Bank(age: Integer, job: String, marital: String, education: String, balance: Integer)\n\nval bank \u003d bankText.map(s \u003d\u003e s.split(\";\")).filter(s \u003d\u003e s(0) !\u003d \"\\\"age\\\"\").map(\n    s \u003d\u003e Bank(s(0).toInt, \n            s(1).replaceAll(\"\\\"\", \"\"),\n            s(2).replaceAll(\"\\\"\", \"\"),\n            s(3).replaceAll(\"\\\"\", \"\"),\n            s(5).replaceAll(\"\\\"\", \"\").toInt\n        )\n).toDF()\nbank.registerTempTable(\"bank\")",
+      "text": "%spark2\nimport org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\n\n// Zeppelin creates and injects sc (SparkContext) and sqlContext (HiveContext or SqlContext)\n// So you don\u0027t need create them manually\n\n// load bank data\nval bankText \u003d sc.parallelize(\n    IOUtils.toString(\n        new URL(\"https://s3.amazonaws.com/apache-zeppelin/tutorial/bank/bank.csv\"),\n        Charset.forName(\"utf8\")).split(\"\\n\"))\n\ncase class Bank(age: Integer, job: String, marital: String, education: String, balance: Integer)\n\nval bank \u003d bankText.map(s \u003d\u003e s.split(\";\")).filter(s \u003d\u003e s(0) !\u003d \"\\\"age\\\"\").map(\n    s \u003d\u003e Bank(s(0).toInt, \n            s(1).replaceAll(\"\\\"\", \"\"),\n            s(2).replaceAll(\"\\\"\", \"\"),\n            s(3).replaceAll(\"\\\"\", \"\"),\n            s(5).replaceAll(\"\\\"\", \"\").toInt\n        )\n).toDF()\nbank.registerTempTable(\"bank\")",
       "user": "anonymous",
-      "dateUpdated": "Mar 9, 2017 2:52:41 PM",
+      "dateUpdated": "2018-04-16 17:24:01.081",
       "config": {
         "colWidth": 12.0,
         "title": true,
@@ -71,8 +72,11 @@
         ],
         "editorSetting": {
           "language": "scala",
-          "editOnDblClick": false
-        }
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "fontSize": 9.0
       },
       "settings": {
         "params": {},
@@ -83,23 +87,23 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "\nimport org.apache.commons.io.IOUtils\n\nimport java.net.URL\n\nimport java.nio.charset.Charset\n\nbankText: org.apache.spark.rdd.RDD[String] \u003d ParallelCollectionRDD[0] at parallelize at \u003cconsole\u003e:32\n\ndefined class Bank\n\nbank: org.apache.spark.sql.DataFrame \u003d [age: int, job: string ... 3 more fields]\n\nwarning: there were 1 deprecation warning(s); re-run with -deprecation for details\n"
+            "data": "import org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\nbankText: org.apache.spark.rdd.RDD[String] \u003d ParallelCollectionRDD[0] at parallelize at \u003cconsole\u003e:30\ndefined class Bank\nbank: org.apache.spark.sql.DataFrame \u003d [age: int, job: string ... 3 more fields]\nwarning: there was one deprecation warning; re-run with -deprecation for details\n"
           }
         ]
       },
       "apps": [],
       "jobName": "paragraph_1423500779206_-1502780787",
       "id": "20150210-015259_1403135953",
-      "dateCreated": "Feb 10, 2015 1:52:59 AM",
-      "dateStarted": "Dec 17, 2016 3:30:09 PM",
-      "dateFinished": "Dec 17, 2016 3:30:58 PM",
+      "dateCreated": "2015-02-10 01:52:59.000",
+      "dateStarted": "2018-04-16 17:24:01.092",
+      "dateFinished": "2018-04-16 17:24:22.507",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.sql \nselect age, count(1) value\nfrom bank \nwhere age \u003c 30 \ngroup by age \norder by age",
+      "text": "%spark2.sql \nselect age, count(1) value\nfrom bank \nwhere age \u003c 30 \ngroup by age \norder by age",
       "user": "anonymous",
-      "dateUpdated": "Mar 9, 2017 2:52:41 PM",
+      "dateUpdated": "2018-04-16 17:27:26.818",
       "config": {
         "colWidth": 4.0,
         "results": [
@@ -107,8 +111,51 @@
             "graph": {
               "mode": "table",
               "height": 300.0,
-              "optionOpen": false
-            }
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "age": "string",
+                      "value": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "age",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "value",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
           }
         ],
         "enabled": true,
@@ -116,7 +163,8 @@
           "language": "sql",
           "editOnDblClick": false
         },
-        "editorMode": "ace/mode/sql"
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0
       },
       "settings": {
         "params": {},
@@ -134,16 +182,16 @@
       "apps": [],
       "jobName": "paragraph_1423500782552_-1439281894",
       "id": "20150210-015302_1492795503",
-      "dateCreated": "Feb 10, 2015 1:53:02 AM",
-      "dateStarted": "Dec 17, 2016 3:30:13 PM",
-      "dateFinished": "Dec 17, 2016 3:31:04 PM",
+      "dateCreated": "2015-02-10 01:53:02.000",
+      "dateStarted": "2018-04-16 17:24:22.616",
+      "dateFinished": "2018-04-16 17:24:25.838",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.sql \nselect age, count(1) value \nfrom bank \nwhere age \u003c ${maxAge\u003d30} \ngroup by age \norder by age",
+      "text": "%spark2.sql \nselect age, count(1) value \nfrom bank \nwhere age \u003c ${maxAge\u003d30} \ngroup by age \norder by age",
       "user": "anonymous",
-      "dateUpdated": "Mar 9, 2017 2:52:41 PM",
+      "dateUpdated": "2018-04-16 17:27:28.764",
       "config": {
         "colWidth": 4.0,
         "results": [
@@ -151,8 +199,63 @@
             "graph": {
               "mode": "table",
               "height": 300.0,
-              "optionOpen": false
-            }
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "age": "string",
+                      "value": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "age",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "value",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
           }
         ],
         "enabled": true,
@@ -160,7 +263,8 @@
           "language": "sql",
           "editOnDblClick": false
         },
-        "editorMode": "ace/mode/sql"
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0
       },
       "settings": {
         "params": {
@@ -168,6 +272,7 @@
         },
         "forms": {
           "maxAge": {
+            "type": "TextBox",
             "name": "maxAge",
             "defaultValue": "30",
             "hidden": false
@@ -186,16 +291,16 @@
       "apps": [],
       "jobName": "paragraph_1423720444030_-1424110477",
       "id": "20150212-145404_867439529",
-      "dateCreated": "Feb 12, 2015 2:54:04 PM",
-      "dateStarted": "Dec 17, 2016 3:30:58 PM",
-      "dateFinished": "Dec 17, 2016 3:31:07 PM",
+      "dateCreated": "2015-02-12 14:54:04.000",
+      "dateStarted": "2018-04-16 17:24:25.887",
+      "dateFinished": "2018-04-16 17:24:26.469",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.sql \nselect age, count(1) value \nfrom bank \nwhere marital\u003d\"${marital\u003dsingle,single|divorced|married}\" \ngroup by age \norder by age",
+      "text": "%spark2.sql \nselect age, count(1) value \nfrom bank \nwhere marital\u003d\"${marital\u003dsingle,single|divorced|married}\" \ngroup by age \norder by age",
       "user": "anonymous",
-      "dateUpdated": "Mar 9, 2017 2:52:41 PM",
+      "dateUpdated": "2018-04-16 17:27:31.112",
       "config": {
         "colWidth": 4.0,
         "results": [
@@ -203,8 +308,30 @@
             "graph": {
               "mode": "table",
               "height": 300.0,
-              "optionOpen": false
-            }
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "age": "string",
+                      "value": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
           }
         ],
         "enabled": true,
@@ -212,7 +339,9 @@
           "language": "sql",
           "editOnDblClick": false
         },
-        "editorMode": "ace/mode/sql"
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "runOnSelectionChange": true
       },
       "settings": {
         "params": {
@@ -220,8 +349,7 @@
         },
         "forms": {
           "marital": {
-            "name": "marital",
-            "defaultValue": "single",
+            "type": "Select",
             "options": [
               {
                 "value": "single"
@@ -233,6 +361,8 @@
                 "value": "married"
               }
             ],
+            "name": "marital",
+            "defaultValue": "single",
             "hidden": false
           }
         }
@@ -249,16 +379,16 @@
       "apps": [],
       "jobName": "paragraph_1423836262027_-210588283",
       "id": "20150213-230422_1600658137",
-      "dateCreated": "Feb 13, 2015 11:04:22 PM",
-      "dateStarted": "Dec 17, 2016 3:31:05 PM",
-      "dateFinished": "Dec 17, 2016 3:31:09 PM",
+      "dateCreated": "2015-02-13 23:04:22.000",
+      "dateStarted": "2018-04-16 17:24:26.504",
+      "dateFinished": "2018-04-16 17:24:27.177",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n## Congratulations, it\u0027s done.\n##### You can create your own notebook in \u0027Notebook\u0027 menu. Good luck!",
       "user": "anonymous",
-      "dateUpdated": "Dec 17, 2016 3:30:24 PM",
+      "dateUpdated": "2018-04-16 17:24:27.211",
       "config": {
         "colWidth": 12.0,
         "editorHide": true,
@@ -277,7 +407,8 @@
           "editOnDblClick": true
         },
         "editorMode": "ace/mode/markdown",
-        "tableHide": false
+        "tableHide": false,
+        "fontSize": 9.0
       },
       "settings": {
         "params": {},
@@ -295,16 +426,16 @@
       "apps": [],
       "jobName": "paragraph_1423836268492_216498320",
       "id": "20150213-230428_1231780373",
-      "dateCreated": "Feb 13, 2015 11:04:28 PM",
-      "dateStarted": "Dec 17, 2016 3:30:24 PM",
-      "dateFinished": "Dec 17, 2016 3:30:29 PM",
+      "dateCreated": "2015-02-13 23:04:28.000",
+      "dateStarted": "2018-04-16 17:24:27.225",
+      "dateFinished": "2018-04-16 17:24:27.235",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n\nAbout bank data\n\n```\nCitation Request:\n  This dataset is public available for research. The details are described in [Moro et al., 2011]. \n  Please include this citation if you plan to use this database:\n\n  [Moro et al., 2011] S. Moro, R. Laureano and P. Cortez. Using Data Mining for Bank Direct Marketing: An Application of the CRISP-DM Methodology. \n  In P. Novais et al. (Eds.), Proceedings of the European Simulation and Modelling Conference - ESM\u00272011, pp. 117-121, Guimarães, Portugal, October, 2011. EUROSIS.\n\n  Available at: [pdf] http://hdl.handle.net/1822/14838\n                [bib] http://www3.dsi.uminho.pt/pcortez/bib/2011-esm-1.txt\n```",
       "user": "anonymous",
-      "dateUpdated": "Dec 17, 2016 3:30:34 PM",
+      "dateUpdated": "2018-04-16 17:24:27.325",
       "config": {
         "colWidth": 12.0,
         "editorHide": true,
@@ -323,7 +454,8 @@
           "editOnDblClick": true
         },
         "editorMode": "ace/mode/markdown",
-        "tableHide": false
+        "tableHide": false,
+        "fontSize": 9.0
       },
       "settings": {
         "params": {},
@@ -341,14 +473,28 @@
       "apps": [],
       "jobName": "paragraph_1427420818407_872443482",
       "id": "20150326-214658_12335843",
-      "dateCreated": "Mar 26, 2015 9:46:58 PM",
-      "dateStarted": "Dec 17, 2016 3:30:34 PM",
-      "dateFinished": "Dec 17, 2016 3:30:34 PM",
+      "dateCreated": "2015-03-26 21:46:58.000",
+      "dateStarted": "2018-04-16 17:24:27.337",
+      "dateFinished": "2018-04-16 17:24:27.349",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "config": {},
+      "user": "anonymous",
+      "dateUpdated": "2018-04-16 17:24:27.438",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
       "settings": {
         "params": {},
         "forms": {}
@@ -356,38 +502,26 @@
       "apps": [],
       "jobName": "paragraph_1435955447812_-158639899",
       "id": "20150703-133047_853701097",
-      "dateCreated": "Jul 3, 2015 1:30:47 PM",
-      "status": "READY",
+      "dateCreated": "2015-07-03 13:30:47.000",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     }
   ],
   "name": "Zeppelin Tutorial (Basic Features)",
   "id": "2A94M5J1Z",
+  "noteParams": {},
+  "noteForms": {},
   "angularObjects": {
-    "2C9J4X9BB:shared_process": [],
-    "2C97XTJFE:shared_process": [],
-    "2C9BD8WCX:shared_process": [],
-    "2CBT85YD7:shared_process": [],
-    "2C8RGTKC3:shared_process": [],
-    "2CBQNWPMD:shared_process": [],
-    "2C8JDGPHH:shared_process": [],
-    "2C9CSKWHY:shared_process": [],
-    "2CBN9WPNN:shared_process": [],
-    "2CB11VTD7:shared_process": [],
-    "2C9Z4TVBW:shared_process": [],
-    "2CB3RUCX8:shared_process": [],
-    "2C9PSG7XP:shared_process": [],
-    "2C8PPBWFC:shared_process": [],
-    "2C95B7UJY:shared_process": [],
-    "2CB91QEZG:shared_process": [],
-    "2CAPDMDA1:shared_process": [],
-    "2CACTG458:shared_process": [],
-    "2CAD4U2BW:shared_process": [],
-    "2CBTJTHZE:shared_process": [],
-    "2C9VPGHR9:shared_process": []
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark2:shared_process": [],
+    "spark:shared_process": [],
+    "livy:shared_process": []
   },
   "config": {
-    "looknfeel": "default"
+    "looknfeel": "default",
+    "isZeppelinNotebookCronEnable": false
   },
   "info": {}
 }
