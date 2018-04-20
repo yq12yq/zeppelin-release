@@ -15,22 +15,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>spark-parent</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.8.0.3.0.0.0-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-spark-dependencies</artifactId>
   <packaging>jar</packaging>
-  <version>0.8.0-SNAPSHOT</version>
+  <version>0.8.0.3.0.0.0-SNAPSHOT</version>
   <name>Zeppelin: Spark dependencies</name>
   <description>Zeppelin spark support</description>
 
@@ -44,12 +42,12 @@
          instead of changing spark.version in this section.
     -->
 
-    <hadoop.version>2.3.0</hadoop.version>
+    <hadoop.version>3.0.0.3.0.0.0-SNAPSHOT</hadoop.version>
     <yarn.version>${hadoop.version}</yarn.version>
     <avro.version>1.7.7</avro.version>
-    <avro.mapred.classifier/>
+    <avro.mapred.classifier />
     <jets3t.version>0.7.1</jets3t.version>
-    <protobuf.version>2.4.1</protobuf.version>
+    <protobuf.version>2.5.0</protobuf.version>
 
     <akka.group>org.spark-project.akka</akka.group>
     <akka.version>2.3.4-spark</akka.version>
@@ -355,7 +353,7 @@
             </filter>
           </filters>
           <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
             <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
               <resource>reference.conf</resource>
             </transformer>
@@ -483,12 +481,9 @@
             </goals>
             <configuration>
               <target>
-                <delete dir="../../interpreter/spark/pyspark"/>
-                <copy todir="../../interpreter/spark/pyspark"
-                      file="${project.build.directory}/${spark.archive}/python/lib/py4j-${py4j.version}-src.zip"/>
-                <zip destfile="${project.build.directory}/../../../interpreter/spark/pyspark/pyspark.zip"
-                     basedir="${project.build.directory}/${spark.archive}/python"
-                     includes="pyspark/*.py,pyspark/**/*.py"/>
+                <delete dir="../../interpreter/spark/pyspark" />
+                <copy file="${project.build.directory}/${spark.archive}/python/lib/py4j-${py4j.version}-src.zip" todir="../../interpreter/spark/pyspark" />
+                <zip basedir="${project.build.directory}/${spark.archive}/python" destfile="${project.build.directory}/../../../interpreter/spark/pyspark/pyspark.zip" includes="pyspark/*.py,pyspark/**/*.py" />
               </target>
             </configuration>
           </execution>

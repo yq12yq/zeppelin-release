@@ -15,23 +15,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <artifactId>interpreter-parent</artifactId>
         <groupId>org.apache.zeppelin</groupId>
-        <version>0.8.0-SNAPSHOT</version>
+        <version>0.8.0.3.0.0.0-SNAPSHOT</version>
         <relativePath>../interpreter-parent</relativePath>
     </parent>
 
     <groupId>org.apache.zeppelin</groupId>
     <artifactId>zeppelin-pig</artifactId>
     <packaging>jar</packaging>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.8.0.3.0.0.0-SNAPSHOT</version>
     <name>Zeppelin: Apache Pig Interpreter</name>
     <description>Zeppelin interpreter for Apache Pig</description>
     <url>http://zeppelin.apache.org</url>
@@ -39,7 +36,7 @@
     <properties>
         <interpreter.name>pig</interpreter.name>
         <pig.version>0.17.0</pig.version>
-        <hadoop.version>2.6.0</hadoop.version>
+        <hadoop.version>3.0.0.3.0.0.0-SNAPSHOT</hadoop.version>
         <tez.version>0.7.0</tez.version>
         <pig.spark.version>1.6.3</pig.spark.version>
         <pig.scala.version>2.10</pig.scala.version>
