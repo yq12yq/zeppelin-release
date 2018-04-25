@@ -1,4 +1,5 @@
 Changes only in Hortonworks github and not in zeppelin 0.8.0 Apache Release
 
 
+BUG-98604: Correct tutorial link should be added in interpreter page
 BUG-100845. Remove livy2.pyspark3 interpreter on zeppelin side
