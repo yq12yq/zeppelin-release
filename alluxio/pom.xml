@@ -22,14 +22,22 @@
     <parent>
         <artifactId>interpreter-parent</artifactId>
         <groupId>org.apache.zeppelin</groupId>
+<<<<<<< HEAD
         <version>0.8.0.3.0.0.0-SNAPSHOT</version>
+=======
+        <version>0.8.1-SNAPSHOT</version>
+>>>>>>> 4d4e415a4... ZEPPELIN-3325. R interpreter build bugfix
         <relativePath>../interpreter-parent</relativePath>
     </parent>
 
     <groupId>org.apache.zeppelin</groupId>
     <artifactId>zeppelin-alluxio</artifactId>
     <packaging>jar</packaging>
+<<<<<<< HEAD
     <version>0.8.0.3.0.0.0-SNAPSHOT</version>
+=======
+    <version>0.8.1-SNAPSHOT</version>
+>>>>>>> 4d4e415a4... ZEPPELIN-3325. R interpreter build bugfix
     <name>Zeppelin: Alluxio interpreter</name>
 
     <properties>
