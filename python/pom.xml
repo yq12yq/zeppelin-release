@@ -107,7 +107,7 @@
             <phase>package</phase>
             <goals><goal>download-single</goal></goals>
             <configuration>
-              <url>https://pypi.python.org/packages/64/5c/01e13b68e8caafece40d549f232c9b5677ad1016071a48d04cc3895acaa3</url>
+              <url>http://s3.amazonaws.com/dev.hortonworks.com/ARTIFACTS/64/5c/01e13b68e8caafece40d549f232c9b5677ad1016071a48d04cc3895acaa3</url>
               <fromFile>py4j-${py4j.version}.zip</fromFile>
               <toFile>${project.build.directory}/../../interpreter/python/py4j-${py4j.version}.zip</toFile>
             </configuration>
