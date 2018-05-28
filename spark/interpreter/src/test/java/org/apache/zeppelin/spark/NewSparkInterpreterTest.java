@@ -17,11 +17,13 @@
 
 package org.apache.zeppelin.spark;
 
+import com.google.common.io.Files;
 import org.apache.zeppelin.display.AngularObjectRegistry;
 import org.apache.zeppelin.display.GUI;
 import org.apache.zeppelin.display.ui.CheckBox;
 import org.apache.zeppelin.display.ui.Select;
 import org.apache.zeppelin.display.ui.TextBox;
+import org.apache.zeppelin.interpreter.Interpreter;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterException;
 import org.apache.zeppelin.interpreter.InterpreterGroup;
@@ -30,10 +32,10 @@ import org.apache.zeppelin.interpreter.InterpreterOutputListener;
 import org.apache.zeppelin.interpreter.InterpreterResult;
 import org.apache.zeppelin.interpreter.InterpreterResultMessageOutput;
 import org.apache.zeppelin.interpreter.remote.RemoteEventClient;
-import org.apache.zeppelin.interpreter.remote.RemoteEventClientWrapper;
 import org.apache.zeppelin.interpreter.thrift.InterpreterCompletion;
 import org.apache.zeppelin.user.AuthenticationInfo;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +60,7 @@ import static org.mockito.Mockito.verify;
 public class NewSparkInterpreterTest {
 
   private SparkInterpreter interpreter;
+  private DepInterpreter depInterpreter;
 
   // catch the streaming output in onAppend
   private volatile String output = "";
@@ -412,6 +416,9 @@ public class NewSparkInterpreterTest {
   public void tearDown() throws InterpreterException {
     if (this.interpreter != null) {
       this.interpreter.close();
+    }
+    if (this.depInterpreter != null) {
+      this.depInterpreter.close();
     }
   }
 
