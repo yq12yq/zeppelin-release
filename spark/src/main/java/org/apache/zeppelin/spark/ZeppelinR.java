@@ -19,6 +19,7 @@ package org.apache.zeppelin.spark;
 import org.apache.commons.exec.*;
 import org.apache.commons.exec.environment.EnvironmentUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.spark.SparkRBackend;
 import org.apache.zeppelin.interpreter.InterpreterException;
 import org.apache.zeppelin.interpreter.InterpreterOutput;
 import org.apache.zeppelin.interpreter.InterpreterOutputListener;
@@ -44,6 +45,7 @@ public class ZeppelinR implements ExecuteResultHandler {
   private PipedOutputStream input;
   private final String scriptPath;
   private final String libPath;
+  private final int timeout;
   static Map<Integer, ZeppelinR> zeppelinR = Collections.synchronizedMap(
       new HashMap<Integer, ZeppelinR>());
 
@@ -108,7 +110,7 @@ public class ZeppelinR implements ExecuteResultHandler {
    * @param libPath sparkr library path
    */
   public ZeppelinR(String rCmdPath, String libPath, int sparkRBackendPort,
-      SparkVersion sparkVersion) {
+      SparkVersion sparkVersion, int timeout) {
     this.rCmdPath = rCmdPath;
     this.libPath = libPath;
     this.sparkVersion = sparkVersion;
@@ -119,6 +121,7 @@ public class ZeppelinR implements ExecuteResultHandler {
     } catch (IOException e) {
       throw new InterpreterException(e);
     }
+    this.timeout= timeout;
   }
 
   /**
@@ -140,7 +143,10 @@ public class ZeppelinR implements ExecuteResultHandler {
     cmd.addArgument(Integer.toString(port));
     cmd.addArgument(libPath);
     cmd.addArgument(Integer.toString(sparkVersion.toNumber()));
-    
+    cmd.addArgument(Integer.toString(timeout));
+    if (sparkVersion.isSecretSocketSupported()) {
+      cmd.addArgument(SparkRBackend.socketSecret());
+    }
     // dump out the R command to facilitate manually running it, e.g. for fault diagnosis purposes
     logger.debug(cmd.toString());
 

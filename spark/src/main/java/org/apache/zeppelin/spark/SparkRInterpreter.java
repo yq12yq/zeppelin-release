@@ -47,6 +47,7 @@ public class SparkRInterpreter extends Interpreter {
   private ZeppelinR zeppelinR;
   private SparkContext sc;
   private JavaSparkContext jsc;
+  private String secret;
 
   public SparkRInterpreter(Properties property) {
     super(property);
@@ -64,19 +65,21 @@ public class SparkRInterpreter extends Interpreter {
       // workaround to make sparkr work without SPARK_HOME
       System.setProperty("spark.test.home", System.getenv("ZEPPELIN_HOME") + "/interpreter/spark");
     }
+    this.sparkInterpreter = getSparkInterpreter();
+    this.sc = sparkInterpreter.getSparkContext();
+    this.jsc = sparkInterpreter.getJavaSparkContext();
+
+    // Share the same SparkRBackend across sessions
+    SparkVersion sparkVersion = new SparkVersion(sc.version());
     synchronized (SparkRBackend.backend()) {
       if (!SparkRBackend.isStarted()) {
-        SparkRBackend.init();
+        SparkRBackend.init(sparkVersion);
         SparkRBackend.start();
       }
     }
 
-    int port = SparkRBackend.port();
+    int timeout = this.sc.getConf().getInt("spark.r.backendConnectionTimeout", 6000);
 
-    this.sparkInterpreter = getSparkInterpreter();
-    this.sc = sparkInterpreter.getSparkContext();
-    this.jsc = sparkInterpreter.getJavaSparkContext();
-    SparkVersion sparkVersion = new SparkVersion(sc.version());
     ZeppelinRContext.setSparkContext(sc);
     ZeppelinRContext.setJavaSparkContext(jsc);
     if (Utils.isSpark2()) {
@@ -84,8 +87,7 @@ public class SparkRInterpreter extends Interpreter {
     }
     ZeppelinRContext.setSqlContext(sparkInterpreter.getSQLContext());
     ZeppelinRContext.setZeppelinContext(sparkInterpreter.getZeppelinContext());
-
-    zeppelinR = new ZeppelinR(rCmdPath, sparkRLibPath, port, sparkVersion);
+    zeppelinR = new ZeppelinR(rCmdPath, sparkRLibPath, SparkRBackend.port(), sparkVersion, timeout);
     try {
       zeppelinR.open();
     } catch (IOException e) {
