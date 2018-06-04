@@ -355,6 +355,12 @@
       <artifactId>hive-jdbc</artifactId>
       <version>${spark-hive.version}</version>
       <classifier>${spark.hive.jdbc.driver.classifier}</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
