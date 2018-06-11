@@ -234,19 +234,25 @@ output = Logger()
 sys.stdout = output
 sys.stderr = output
 
-client = GatewayClient(port=int(sys.argv[1]))
+port=int(sys.argv[1])
 sparkVersion = SparkVersion(int(sys.argv[2]))
+secret = None
+if len(sys.argv) == 4:
+  secret = sys.argv[3]
+
 
 if sparkVersion.isSpark2():
   from pyspark.sql import SparkSession
 else:
   from pyspark.sql import SchemaRDD
 
-
-if sparkVersion.isAutoConvertEnabled():
-  gateway = JavaGateway(client, auto_convert = True)
+auto_convert = sparkVersion.isAutoConvertEnabled()
+if secret:
+  from py4j.java_gateway import GatewayParameters
+  gateway = JavaGateway(gateway_parameters=GatewayParameters(
+    port=port, auth_token=secret, auto_convert=auto_convert))
 else:
-  gateway = JavaGateway(client)
+  gateway = JavaGateway(GatewayClient(port=port), auto_convert=auto_convert)
 
 java_import(gateway.jvm, "org.apache.spark.SparkEnv")
 java_import(gateway.jvm, "org.apache.spark.SparkConf")
