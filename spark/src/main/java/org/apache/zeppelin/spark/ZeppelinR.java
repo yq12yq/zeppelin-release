@@ -121,7 +121,7 @@ public class ZeppelinR implements ExecuteResultHandler {
     } catch (IOException e) {
       throw new InterpreterException(e);
     }
-    this.timeout= timeout;
+    this.timeout = timeout;
   }
 
   /**
