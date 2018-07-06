@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.8.0 Apache Release
 
+BUG-108587:   ZEPPELIN-3587. Interpret paragarph text as whole code statement instead of breaking into lines
 BUG-106906:   Add shiro-tools-hasher in Zeppelin
 BUG-106418:   ZEPPELIN-3570. Fix for doing user search for LDAPRealm
 BUG-106297:   JDBC interpreter log file is missing in zeppelin log directory
