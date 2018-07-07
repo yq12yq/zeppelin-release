@@ -263,6 +263,11 @@
         <artifactId>shiro-config-core</artifactId>
         <version>${shiro.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.shiro.tools</groupId>
+        <artifactId>shiro-tools-hasher</artifactId>
+        <version>${shiro.version}</version>
+      </dependency>
 
       <!-- Test libraries -->
       <dependency>
