@@ -6,3 +6,4 @@ BUG-106297:   JDBC interpreter log file is missing in zeppelin log directory
 BUG-102172:   Include Google Connector in Zeppelin
 BUG-98604:    Correct tutorial link should be added in interpreter page
 BUG-100845:   Remove livy2.pyspark3 interpreter on zeppelin side
+BUG-108261:   Fix hadoop-azure dependency conflict

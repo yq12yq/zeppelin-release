@@ -730,6 +730,14 @@
               <artifactId>jackson-core</artifactId>
             </exclusion>
             <exclusion>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-databind</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>joda-time</groupId>
+              <artifactId>joda-time</artifactId>
+            </exclusion>
+            <exclusion>
               <groupId>com.google.guava</groupId>
               <artifactId>guava</artifactId>
             </exclusion>
@@ -877,6 +885,10 @@
             <exclusion>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-databind</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>joda-time</groupId>
+              <artifactId>joda-time</artifactId>
             </exclusion>
             <exclusion>
               <groupId>org.eclipse.jetty</groupId>
