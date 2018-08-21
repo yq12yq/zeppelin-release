@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -43,6 +44,8 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
 import org.apache.zeppelin.annotation.ZeppelinApi;
+import org.apache.zeppelin.conf.ZeppelinConfiguration;
+import org.apache.zeppelin.notebook.Notebook;
 import org.apache.zeppelin.notebook.NotebookAuthorization;
 import org.apache.zeppelin.realm.jwt.JWTAuthenticationToken;
 import org.apache.zeppelin.realm.jwt.KnoxJwtRealm;
@@ -62,6 +65,12 @@ public class LoginRestApi {
 
   private static final Logger LOG = LoggerFactory.getLogger(LoginRestApi.class);
   private static final Gson gson = new Gson();
+  private ZeppelinConfiguration zConf;
+
+  @Inject
+  public LoginRestApi(Notebook notebook) {
+    this.zConf = notebook.getConf();
+  }
 
   /**
    * Required by Swagger.
@@ -213,15 +222,22 @@ public class LoginRestApi {
   public Response logout() {
     JsonResponse response;
     logoutCurrentUser();
+    Status status = null;
+    Map<String, String> data = new HashMap<>();
+    if (zConf.isAuthorizationHeaderClear()) {
+      status = Status.UNAUTHORIZED;
+      data.put("clearAuthorizationHeader", "true");
+    } else {
+      status = Status.FORBIDDEN;
+      data.put("clearAuthorizationHeader", "false");
+    }
     if (isKnoxSSOEnabled()) {
       KnoxJwtRealm knoxJwtRealm = getJTWRealm();
-      Map<String, String> data = new HashMap<>();
       data.put("redirectURL", constructKnoxUrl(knoxJwtRealm, knoxJwtRealm.getLogout()));
       data.put("isLogoutAPI", knoxJwtRealm.getLogoutAPI().toString());
-      response = new JsonResponse(Status.UNAUTHORIZED, "", data);
+      response = new JsonResponse(status, "", data);
     } else {
-      response = new JsonResponse(Status.UNAUTHORIZED, "", "");
-
+      response = new JsonResponse(status, "", data);
     }
     LOG.warn(response.toString());
     return response.build();
