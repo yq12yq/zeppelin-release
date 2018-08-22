@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.8.0 Apache Release
 
+ZEP-79:       Disable fs.file.impl cache to ensure RawLocalFS is used
 BUG-109581:   [ZEPPELIN-3741] Do not clear "Authorization" header if Z-server is running behind proxy
 BUG-108749:   Update org.eclipse.jetty version to 9.4.11.v20180605 to avoid CVE issues
 BUG-108587:   ZEPPELIN-3587. Interpret paragarph text as whole code statement instead of breaking into lines
