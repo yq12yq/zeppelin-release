@@ -76,4 +76,4 @@ ZEPPELIN-903    Replace CXF with Jersey2
 ZEPPELIN-3072   Zeppelin UI becomes slow/unresponsive if there are too many notebooks
 ZEPPELIN-3129   Zepplin UI Doesnt logs out in IE
 BUG-93529       Issues with Remote Storage and Kerberos
-
+BUG-109874      Fix secret socket supported version
