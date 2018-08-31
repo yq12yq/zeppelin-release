@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.3 Apache Release
 
+ZEP-79          Disable fs.file.impl cache to ensure RawLocalFS is used
 ZEPPELIN-3271   Option for disabling scheduler
 BUG-93580       Replace CXF with Jersey2 [ZEPPELIN-903]
 ZEPPELIN-3072   Zeppelin UI becomes slow/unresponsive if there are too many notebooks
