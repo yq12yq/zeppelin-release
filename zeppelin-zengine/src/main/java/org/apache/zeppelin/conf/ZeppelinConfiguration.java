@@ -493,6 +493,14 @@ public class ZeppelinConfiguration extends XMLConfiguration {
   }
 
 
+  public Boolean isZeppelinNotebookCronEnable() {
+    return getBoolean(ConfVars.ZEPPELIN_NOTEBOOK_CRON_ENABLE);
+  }
+
+  public String getZeppelinNotebookCronFolders() {
+    return getString(ConfVars.ZEPPELIN_NOTEBOOK_CRON_FOLDERS);
+  }
+
   public Map<String, String> dumpConfigurations(ZeppelinConfiguration conf,
                                                 ConfigurationKeyPredicate predicate) {
     Map<String, String> configurations = new HashMap<>();
@@ -639,6 +647,9 @@ public class ZeppelinConfiguration extends XMLConfiguration {
     ZEPPELIN_SERVER_JETTY_NAME("zeppelin.server.jetty.name", null),
     ZEPPELIN_SERVER_STRICT_TRANSPORT("zeppelin.server.strict.transport", "max-age=631138519"),
     ZEPPELIN_SERVER_X_XSS_PROTECTION("zeppelin.server.xxss.protection", "1"),
+
+    ZEPPELIN_NOTEBOOK_CRON_ENABLE("zeppelin.notebook.cron.enable", false),
+    ZEPPELIN_NOTEBOOK_CRON_FOLDERS("zeppelin.notebook.cron.folders", null);
 
 
     private String varName;
