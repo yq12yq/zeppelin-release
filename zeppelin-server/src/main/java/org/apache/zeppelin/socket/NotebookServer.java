@@ -780,6 +780,11 @@ public class NotebookServer extends WebSocketServlet
 
     Note note = notebook.getNote(noteId);
     if (note != null) {
+      if (!(Boolean) note.getConfig().get("isZeppelinNotebookCronEnable")) {
+        if (config.get("cron") != null) {
+          config.remove("cron");
+        }
+      }
       boolean cronUpdated = isCronUpdated(config, note.getConfig());
       note.setName(name);
       note.setConfig(config);
@@ -847,7 +852,8 @@ public class NotebookServer extends WebSocketServlet
     Note note = notebook.getNote(noteId);
     if (note != null) {
       note.setName(name);
-
+      note.setCronSupported(notebook.getConf());
+      
       AuthenticationInfo subject = new AuthenticationInfo(fromMessage.principal);
       note.persist(subject);
       broadcastNote(note);
@@ -939,6 +945,7 @@ public class NotebookServer extends WebSocketServlet
           noteName = "Note " + note.getId();
         }
         note.setName(noteName);
+        note.setCronSupported(notebook.getConf());
       }
 
       note.persist(subject);

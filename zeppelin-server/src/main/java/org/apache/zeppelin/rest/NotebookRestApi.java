@@ -37,6 +37,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.zeppelin.annotation.ZeppelinApi;
+import org.apache.zeppelin.conf.ZeppelinConfiguration;
 import org.apache.zeppelin.interpreter.InterpreterResult;
 import org.apache.zeppelin.notebook.Note;
 import org.apache.zeppelin.notebook.Notebook;
@@ -173,6 +174,13 @@ public class NotebookRestApi {
   private void checkIfNoteIsNotNull(Note note) {
     if (note == null) {
       throw new NotFoundException("note not found");
+    }
+  }
+
+  private void checkIfNoteSupportsCron(Note note) {
+    if (!note.isCronSupported(notebook.getConf())) {
+      LOG.error("Cron is not enabled from Zeppelin server");
+      throw new ForbiddenException("Cron is not enabled from Zeppelin server");
     }
   }
   
@@ -808,6 +816,7 @@ public class NotebookRestApi {
     Note note = notebook.getNote(noteId);
     checkIfNoteIsNotNull(note);
     checkIfUserCanWrite(noteId, "Insufficient privileges you cannot set a cron job for this note");
+    checkIfNoteSupportsCron(note);
 
     if (!CronExpression.isValidExpression(request.getCronString())) {
       return new JsonResponse<>(Status.BAD_REQUEST, "wrong cron expressions.").build();
@@ -839,6 +848,7 @@ public class NotebookRestApi {
     checkIfNoteIsNotNull(note);
     checkIfUserIsOwner(noteId,
         "Insufficient privileges you cannot remove this cron job from this note");
+    checkIfNoteSupportsCron(note);
 
     Map<String, Object> config = note.getConfig();
     config.put("cron", null);
@@ -865,6 +875,7 @@ public class NotebookRestApi {
     Note note = notebook.getNote(noteId);
     checkIfNoteIsNotNull(note);
     checkIfUserCanRead(noteId, "Insufficient privileges you cannot get cron information");
+    checkIfNoteSupportsCron(note);
 
     return new JsonResponse<>(Status.OK, note.getConfig().get("cron")).build();
   }
