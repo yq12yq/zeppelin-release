@@ -1,5 +1,6 @@
 Changes only in Hortonworks github and not in zeppelin 0.7.0 Apache Release
 
+ZEPPELIN-3271   Option for disabling scheduler
 =======
 BUG-79934       [minor] Improve Session
 BUG-79635       zeppelin build failure in 2.6-maint

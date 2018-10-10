@@ -17,6 +17,7 @@
 
 package org.apache.zeppelin.notebook;
 
+import com.google.common.annotations.VisibleForTesting;
 import static java.lang.String.format;
 
 import java.io.IOException;
@@ -266,6 +267,27 @@ public class Note implements Serializable, ParagraphJobListener {
 
   void setJobListenerFactory(JobListenerFactory jobListenerFactory) {
     this.jobListenerFactory = jobListenerFactory;
+  }
+
+  public Boolean isCronSupported(ZeppelinConfiguration config) {
+    if (config.isZeppelinNotebookCronEnable()) {
+      config.getZeppelinNotebookCronFolders();
+      if (config.getZeppelinNotebookCronFolders() == null) {
+        return true;
+      } else {
+        for (String folder : config.getZeppelinNotebookCronFolders().split(",")) {
+          folder = folder.replaceAll("\\*", "\\.*").replaceAll("\\?", "\\.");
+          if (getName().matches(folder)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  public void setCronSupported(ZeppelinConfiguration config) {
+    getConfig().put("isZeppelinNotebookCronEnable", isCronSupported(config));
   }
 
   void setNotebookRepo(NotebookRepo repo) {
