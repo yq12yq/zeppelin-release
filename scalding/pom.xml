@@ -15,26 +15,25 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>zeppelin</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.6.0.2.5.3.162-3</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-scalding</artifactId>
   <packaging>jar</packaging>
-  <version>0.6.1-SNAPSHOT</version>
+  <version>0.6.0.2.5.3.162-3</version>
   <name>Zeppelin: Scalding interpreter</name>
   <url>http://zeppelin.apache.org</url>
 
   <properties>
-    <hadoop.version>2.6.0</hadoop.version>
+    <hadoop.version>2.7.3.2.5.3.162-3</hadoop.version>
     <scalding.version>0.16.1-RC1</scalding.version>
   </properties>
 
