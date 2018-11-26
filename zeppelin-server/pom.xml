@@ -21,20 +21,20 @@
   <parent>
     <artifactId>zeppelin</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.7.3.2.6.3.0-SNAPSHOT</version>
+    <version>0.7.3.2.6.4.106-1</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-server</artifactId>
   <packaging>jar</packaging>
-  <version>0.7.3.2.6.3.0-SNAPSHOT</version>
+  <version>0.7.3.2.6.4.106-1</version>
   <name>Zeppelin: Server</name>
 
   <properties>
     <!--library versions-->
     <cxf.version>2.7.8</cxf.version>
-    <hadoop-common.version>2.7.3.2.6.3.0-SNAPSHOT</hadoop-common.version>
+    <hadoop-common.version>2.7.3.2.6.4.106-1</hadoop-common.version>
     <commons.httpclient.version>4.3.6</commons.httpclient.version>
     <jersey.version>2.22.2</jersey.version>
     <quartz.scheduler.version>2.2.1</quartz.scheduler.version>

@@ -22,20 +22,20 @@
   <parent>
     <artifactId>zeppelin</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.7.3.2.6.3.0-SNAPSHOT</version>
+    <version>0.7.3.2.6.4.106-1</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-zengine</artifactId>
   <packaging>jar</packaging>
-  <version>0.7.3.2.6.3.0-SNAPSHOT</version>
+  <version>0.7.3.2.6.4.106-1</version>
   <name>Zeppelin: Zengine</name>
   <description>Zeppelin Zengine</description>
 
   <properties>
     <!--library versions-->
-    <hadoop.version>2.7.3.2.6.3.0-SNAPSHOT</hadoop.version>
+    <hadoop.version>2.7.3.2.6.4.106-1</hadoop.version>
     <adl.sdk.version>2.1.4</adl.sdk.version>
     <commons.lang3.version>3.4</commons.lang3.version>
     <commons.vfs2.version>2.0</commons.vfs2.version>
