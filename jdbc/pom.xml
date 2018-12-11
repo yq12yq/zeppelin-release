@@ -21,22 +21,22 @@
   <parent>
     <artifactId>interpreter-parent</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.8.0.3.0.0.0-SNAPSHOT</version>
+    <version>0.8.0.3.1.0.0-78</version>
     <relativePath>../interpreter-parent</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-jdbc</artifactId>
   <packaging>jar</packaging>
-  <version>0.8.0.3.0.0.0-SNAPSHOT</version>
+  <version>0.8.0.3.1.0.0-78</version>
   <name>Zeppelin: JDBC interpreter</name>
 
   <profiles>
     <profile>
       <id>jdbc-hive</id>
       <properties>
-        <hive.version>3.0.0.3.0.0.0-SNAPSHOT</hive.version>
-        <hive2.version>2.1.0</hive2.version>
+        <hive.version>3.1.0.3.1.0.0-78</hive.version>
+        <hive2.version>3.1.0.3.1.0.0-78</hive2.version>
       </properties>
 
       <dependencies>
@@ -90,7 +90,7 @@
     <profile>
       <id>jdbc-phoenix</id>
       <properties>
-        <phoenix.version>5.0.0.3.0.0.0-SNAPSHOT</phoenix.version>
+        <phoenix.version>5.0.0.3.1.0.0-78</phoenix.version>
       </properties>
       <dependencies>
         <dependency>
@@ -110,7 +110,7 @@
     <profile>
       <id>jdbc-hadoop2</id>
       <properties>
-        <hadoop-common.version>3.0.0.3.0.0.0-SNAPSHOT</hadoop-common.version>
+        <hadoop-common.version>3.1.1.3.1.0.0-78</hadoop-common.version>
       </properties>
       <dependencies>
         <dependency>
@@ -171,7 +171,7 @@
     <profile>
       <id>jdbc-hadoop3</id>
       <properties>
-        <hadoop-common.version>3.0.0.3.0.0.0-SNAPSHOT</hadoop-common.version>
+        <hadoop-common.version>3.1.1.3.1.0.0-78</hadoop-common.version>
       </properties>
       <dependencies>
         <dependency>
@@ -237,7 +237,7 @@
     <hadoop.common.version>2.7.2</hadoop.common.version>
     <h2.version>1.4.190</h2.version>
     <commons.dbcp2.version>2.0.1</commons.dbcp2.version>
-    <spark-hive.version>1.21.2.3.0.0.0-SNAPSHOT</spark-hive.version>
+    <spark-hive.version>1.21.2.3.1.0.0-78</spark-hive.version>
     <spark.hive.jdbc.driver.classifier>standalone</spark.hive.jdbc.driver.classifier>
 
     <!--test library versions-->

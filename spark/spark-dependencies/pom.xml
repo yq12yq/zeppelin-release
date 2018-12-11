@@ -21,14 +21,14 @@
   <parent>
     <artifactId>spark-parent</artifactId>
     <groupId>org.apache.zeppelin</groupId>
-    <version>0.8.0.3.0.0.0-SNAPSHOT</version>
+    <version>0.8.0.3.1.0.0-78</version>
     <relativePath>..</relativePath>
   </parent>
 
   <groupId>org.apache.zeppelin</groupId>
   <artifactId>zeppelin-spark-dependencies</artifactId>
   <packaging>jar</packaging>
-  <version>0.8.0.3.0.0.0-SNAPSHOT</version>
+  <version>0.8.0.3.1.0.0-78</version>
   <name>Zeppelin: Spark dependencies</name>
   <description>Zeppelin spark support</description>
 
@@ -42,7 +42,7 @@
          instead of changing spark.version in this section.
     -->
 
-    <hadoop.version>3.0.0.3.0.0.0-SNAPSHOT</hadoop.version>
+    <hadoop.version>3.1.1.3.1.0.0-78</hadoop.version>
     <yarn.version>${hadoop.version}</yarn.version>
     <avro.version>1.7.7</avro.version>
     <avro.mapred.classifier />
